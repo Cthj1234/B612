@@ -183,9 +183,7 @@ public class CampManagementApplication {
 
     public static void addSubjects(Student student, String subjectType, int minNum) {
         boolean addFlag;
-        //sc.nextLine();
         HashMap<String, Subject> subjectMap;
-        //HashMap<String, Subject> choiceSubjectMap;
 
         do {
             addFlag = true;
@@ -247,9 +245,7 @@ public class CampManagementApplication {
     // 수강생 목록 조회
     private static void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-        Iterator<Student> iterator = studentStore.iterator();
-        while (iterator.hasNext()){
-            Student students = iterator.next();
+        for (Student students : studentStore) {
             System.out.print("[" + students.getStudentId() + "] ");
             System.out.println("이름 : " + students.getStudentName());
         }
