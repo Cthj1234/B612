@@ -1,11 +1,11 @@
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Student {
     private String studentId;
     private String studentName;
 
-    // 수강하는 과목의
-    private HashMap<String, String> subjectList;
+    private HashMap<String, Subject> subjectList;
 
     public Student(String seq, String studentName) {
         this.studentId = seq;
@@ -21,7 +21,8 @@ public class Student {
         return studentName;
     }
 
-    public HashMap<String, String> getSubjectList() {
+    public HashMap<String, Subject> getSubjectList() {
         return subjectList;
     }
+
 }

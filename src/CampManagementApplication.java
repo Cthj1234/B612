@@ -156,67 +156,57 @@ public class CampManagementApplication {
         System.out.print("수강생 이름 입력: ");
         String studentName = sc.next();
         // 기능 구현 (필수 과목, 선택 과목)
+        sc.nextLine();
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
         addSubjectList(student);
         // 기능 구현
         studentStore.add(student);
-        System.out.println("수강생 등록 성공!\n");
+        System.out.println("수강생 등록 성공!");
     }
 
     public static void addSubjectList(Student student) {
+        addMandatorySubjects(student);
+        addChoiceSubjects(student);
+    }
+
+    public static void addMandatorySubjects(Student student){
+        System.out.println("=========================");
+        System.out.println("수강할 필수 과목을 3개 이상 선택해주세요");
+        addSubjects(student, SUBJECT_TYPE_MANDATORY, 3);
+    }
+
+    public static void addChoiceSubjects(Student student){
+        System.out.println("=========================");
+        System.out.println("수강할 선택 과목을 2개 이상 선택해주세요");
+        addSubjects(student, SUBJECT_TYPE_CHOICE, 2);
+    }
+
+    public static void addSubjects(Student student, String subjectType, int minNum) {
         boolean addFlag;
-        sc.nextLine();
+        //sc.nextLine();
+        HashMap<String, Subject> subjectMap;
+        //HashMap<String, Subject> choiceSubjectMap;
+
         do {
             addFlag = true;
+            subjectMap = new HashMap<>();
+            printSubjects(subjectType);
             System.out.println("=========================");
-            System.out.println("[필수] 1. Java  2. 객체지향  3. Spring  4. JPA  5. MySQL");
-            System.out.println("=========================");
-            System.out.println("수강할 필수 과목을 3개 이상 선택해주세요! (숫자로 입력)");
+            System.out.println("과목 번호를 입력하세요 (숫자로 입력)");
             String mandatorySubject = sc.nextLine();
-            String[] mandatoryArr = mandatorySubject.split("[, ]");
-            if (mandatoryArr.length < 3) {
-                // throw new AddSubjectException("");
-                System.out.println("필수 과목은 3개 이상 선택해야 합니다. ");
+            // 공백 또는 쉼표로 구분받기
+            String[] subjectArr = mandatorySubject.split("[, ]");
+            if (subjectArr.length < minNum) {
+                System.out.println(subjectType + " 과목은 " + minNum + "개 이상 선택해야 합니다. ");
                 addFlag = false;
             } else {
-                for (String subjectId : mandatoryArr) {
+                // 입력한 값 중 하나라도 과목 목록에 존재하지 않으면 다시 입력 받아야 함
+                for (String subjectId : subjectArr) {
                     subjectId = INDEX_TYPE_SUBJECT + subjectId;
                     for (Subject sub: subjectStore) {
-                        // 입력한 과목명이 등록된 과목번호와 일치할 때
-                        // 입력한 과목이 과목 리스트에 모두 존재해야 subjectList에 put할 수 있도록 수정 필요
-                        if (subjectId.equals(sub.getSubjectId())){
-                            student.getSubjectList().put(sub.getSubjectId(), sub.getSubjectName());
-                            System.out.println("필수 과목 [" + sub.getSubjectName()+ "] 등록 완료!");
-                            addFlag = true;
-                            break;
-                        }
-                        addFlag = false;
-                    }
-                    if (!addFlag) System.out.println("올바른 번호를 입력해주세요!");
-                }
-            }
-        } while (!addFlag);
-
-        do {
-            addFlag = true;
-            System.out.println("=========================");
-            System.out.println("[선택] 6.디자인 패턴  7. Spring Security  8. Redis  9. MongoDB");
-            System.out.println("=========================");
-            System.out.println("수강할 선택 과목을 2개 이상 선택해주세요! (숫자로 입력)");
-            String choiceSubject = sc.nextLine();
-            String[] choiceArr = choiceSubject.split("[, ]");
-
-            if (choiceArr.length < 2) {
-                System.out.println("선택 과목은 2개 이상 선택해야 합니다. ");
-                addFlag = false;
-            } else {
-                for (String subjectId : choiceArr) {
-                    subjectId = INDEX_TYPE_SUBJECT + subjectId;
-                    for (Subject sub: subjectStore) {
-                        // 입력한 과목명이 등록된 과목번호와 일치할 때
-                        if (subjectId.equals(sub.getSubjectId())){
-                            student.getSubjectList().put(sub.getSubjectId(), sub.getSubjectName());
-                            System.out.println("선택 과목 [" + sub.getSubjectName()+ "] 등록 완료!");
+                        // 입력한 과목명이 등록된 과목 번호와 일치할 때
+                        if (subjectId.equals(sub.getSubjectId()) && sub.getSubjectType().equals(subjectType)){
+                            subjectMap.put(sub.getSubjectId(), sub);
                             addFlag = true;
                             break;
                         }
@@ -224,10 +214,34 @@ public class CampManagementApplication {
                     }
                     if (!addFlag) {
                         System.out.println("올바른 번호를 입력해주세요!");
+                        break;
                     }
                 }
             }
         } while (!addFlag);
+
+        student.getSubjectList().putAll(subjectMap);
+        System.out.println(subjectType +" 과목 등록 완료!");
+    }
+
+    public static void printSubjects(String subjectType) {
+        System.out.println("=========================");
+        if (subjectType.equals(SUBJECT_TYPE_MANDATORY)) {
+            System.out.print("[필수] ");
+            for (Subject sub : subjectStore) {
+                if (sub.getSubjectType().equals(SUBJECT_TYPE_MANDATORY)) {
+                    System.out.print(sub.getSubjectId().substring(2) + ". " + sub.getSubjectName() + " | ");
+                }
+            }
+        } else {
+            System.out.print("[선택] ");
+            for (Subject sub : subjectStore) {
+                if (sub.getSubjectType().equals(SUBJECT_TYPE_CHOICE)) {
+                    System.out.print(sub.getSubjectId().substring(2) + ". " + sub.getSubjectName() + " | ");
+                }
+            }
+        }
+        System.out.println();
     }
 
     // 수강생 목록 조회
