@@ -151,7 +151,11 @@ class Main {
         String studentName = sc.next();
         // 기능 구현 (필수 과목, 선택 과목)
 
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
+        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName);
+//        // 수강생 인스턴스 생성 예시 코드
+//        System.out.println("과목 입력 :");
+//        String subjectName = sc.next();
+//        Subject subject = new Subject(sequence(INDEX_TYPE_SUBJECT), subjectName, SUBJECT_TYPE_MANDATORY);
         studentStore.add(student);
         System.out.println("수강생 등록 성공!\n");
     }
@@ -197,16 +201,89 @@ class Main {
         return sc.next();
     }
 
+    private static String getSubject() {
+        System.out.println("불러올 과목을 선택해 주세요.");
+        int j = 1;
+        for (Subject subject : subjectStore) {
+            if (subject.getSubjectType() == SUBJECT_TYPE_MANDATORY) {
+                System.out.print(j + "." + subject.getSubjectName() + " ");
+                j++;
+            }
+        }
+        for (Subject subject : subjectStore) {
+            if (subject.getSubjectType() == SUBJECT_TYPE_CHOICE) {
+                System.out.print(j + "." + subject.getSubjectName() + " ");
+                j++;
+            }
+        }
+        return sc.next();
+    }
+
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        System.out.println("등록할 과목을 선택해 주십시오.");
+        int i = 1;
+        for (Subject subject : subjectStore) {
+            if (subject.getSubjectType() == SUBJECT_TYPE_MANDATORY) {
+                System.out.print(i + "." + subject.getSubjectName() + " ");
+                i++;
+            }
+        }
+        for (Subject subject : subjectStore) {
+            if (subject.getSubjectType() == SUBJECT_TYPE_CHOICE) {
+                System.out.print(i + "." + subject.getSubjectName() + " ");
+                i++;
+            }
+        }
+
+        int input = sc.nextInt();
+        switch (input) {
+            case 1:
+                System.out.println("Java 과목 성적을 불러오는 중입니다.");
+                break;
+
+            case 2:
+                System.out.println("객체지향 과목 성적을 불러오는 중입니다.");
+                //학생의 과목 성적 목록 불러오기
+                break;
+            case 3:
+                System.out.println("Spring 과목 성적을 불러오는 중입니다.");
+                //학생의 과목 성적 목록 불러오기
+                break;
+            case 4:
+                System.out.println("JPA 과목 성적을 불러오는 중입니다.");
+                //학생의 과목 성적 목록 불러오기
+                break;
+            case 5:
+                System.out.println("MySQL 과목 성적을 불러오는 중입니다.");
+                //학생의 과목 성적 목록 불러오기
+                break;
+            case 6:
+                System.out.println("디자인 패턴 과목 성적을 불러오는 중입니다.");
+                //학생의 과목 성적 목록 불러오기
+                break;
+            case 7:
+                System.out.println("Spring Seucrity 과목 성적을 불러오는 중입니다.");
+                //학생의 과목 성적 목록 불러오기
+                break;
+            case 8:
+                System.out.println("Redis 과목 성적을 불러오는 중입니다.");
+                //학생의 과목 성적 목록 불러오기
+                break;
+            case 9:
+                System.out.println("MongoDB 과목 성적을 불러오는 중입니다.");
+                //학생의 과목 성적 목록 불러오기
+                break;
+        }
+
         System.out.println("시험 점수를 입력해 주십시오.");
         String score = sc.next();
         System.out.println("시험 점수를 등록합니다...");
         Score sco = new Score(score);
         scoreStore.add(sco);
-        System.out.println("\n점수 등록 성공!");
-    }
+        System.out.println("\n점수 등록 성공!"); //점수 등록을 그냥 하면 과목을 어디서 저장
+    } //성적 등록할 때 과목을
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
@@ -220,12 +297,25 @@ class Main {
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (조회할 특정 과목)
+        String subject = getSubject();
+
+        int i = 1;
+
         System.out.println("회차별 등급을 조회합니다...");
-        Iterator<Score> iterator = scoreStore.iterator();
-        while (iterator.hasNext()) {
-            Score score = iterator.next();
-            System.out.println("등급 : " + score.getScoreId());
+        for (Score score : scoreStore) {
+            System.out.println(i + "회차");
+            i++;
+            if (Integer.parseInt(score.getScoreId()) >= 95) {
+                System.out.println("등급 : A");
+            } else if (Integer.parseInt(score.getScoreId()) >= 90) {
+                System.out.println("등급 : B");
+            } else if (Integer.parseInt(score.getScoreId()) >= 80) {
+                System.out.println("등급 : C");
+            } else if (Integer.parseInt(score.getScoreId()) >= 70) {
+                System.out.println("등급 : D");
+            } else if (Integer.parseInt(score.getScoreId()) >= 60) {
+                System.out.println("등급 : F");
+            } else System.out.println("등급 : N");
         }
         System.out.println("\n등급 조회 성공!");
     }
