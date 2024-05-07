@@ -30,7 +30,7 @@ class Main {
     }
 
     private static void setInitData() {
-        studentStore = new ArrayList<>();
+        studentStore = new ArrayList<>(); // 여기에 이제 그 뭐더라 학생 번호가 다르게 들어올거란 말이여?
         subjectStore = List.of(
                 new Subject(
                         sequence(INDEX_TYPE_SUBJECT),
@@ -149,13 +149,28 @@ class Main {
         System.out.println("\n수강생을 등록합니다...");
         System.out.print("수강생 이름 입력: ");
         String studentName = sc.next();
-        // 기능 구현 (필수 과목, 선택 과목)
+
+        System.out.println("등록할 과목을 선택해 주십시오.");
+        int i = 1;
+        for (Subject subject : subjectStore) {
+            if (subject.getSubjectType() == SUBJECT_TYPE_MANDATORY) {
+                System.out.print(i + "." + subject.getSubjectName() + " ");
+                i++;
+            }
+        }
+        for (Subject subject : subjectStore) {
+            if (subject.getSubjectType() == SUBJECT_TYPE_CHOICE) {
+                System.out.print(i + "." + subject.getSubjectName() + " ");
+                i++;
+            }
+        }
+        String subName = sc.next();
+
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName);
-//        // 수강생 인스턴스 생성 예시 코드
-//        System.out.println("과목 입력 :");
-//        String subjectName = sc.next();
-//        Subject subject = new Subject(sequence(INDEX_TYPE_SUBJECT), subjectName, SUBJECT_TYPE_MANDATORY);
+
+
+
         studentStore.add(student);
         System.out.println("수강생 등록 성공!\n");
     }
@@ -221,21 +236,7 @@ class Main {
 
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        System.out.println("등록할 과목을 선택해 주십시오.");
-        int i = 1;
-        for (Subject subject : subjectStore) {
-            if (subject.getSubjectType() == SUBJECT_TYPE_MANDATORY) {
-                System.out.print(i + "." + subject.getSubjectName() + " ");
-                i++;
-            }
-        }
-        for (Subject subject : subjectStore) {
-            if (subject.getSubjectType() == SUBJECT_TYPE_CHOICE) {
-                System.out.print(i + "." + subject.getSubjectName() + " ");
-                i++;
-            }
-        }
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호 점수를 만들 때 과목이 필요한게 아닌가? 으앙거ㅏ
 
         int input = sc.nextInt();
         switch (input) {
@@ -297,7 +298,11 @@ class Main {
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
+
         String subject = getSubject();
+
+        // 학생번호 studentId에 넣고 과목번호 subject에 넣음
+        // 요거에 해당하는 데이터만 불러오기.
 
         int i = 1;
 
