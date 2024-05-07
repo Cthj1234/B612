@@ -3,7 +3,7 @@ public class Student {
     private String studentName;
     private String studentSubject;
 
-    public Student(String seq, String studentName) {
+    public Student(String seq, String studentName, String studentSubject) {
         this.studentId = seq;
         this.studentName = studentName;
         this.studentSubject = studentSubject;

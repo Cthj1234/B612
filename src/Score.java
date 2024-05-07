@@ -1,10 +1,15 @@
 public class Score {
     private String scoreId;
-    private int studentId;
+    private String subjectName;
+    private String studentId;
+    private String Grade;
 
 
-    public Score(String seq) {
+    public Score(String seq, String subjectName, String studentId, String grade) {
         this.scoreId = seq;
+        this.subjectName = subjectName;
+        this.studentId = studentId;
+        this.Grade = grade;
     }
 
     // Getter
@@ -12,9 +17,15 @@ public class Score {
         return scoreId;
     } // 과목 고유 번호
 
-    public int getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
+    public String getSubjectName() {
+        return subjectName;
+    }
+    public String getGrade() {
+        return Grade;
+    }
 
 }

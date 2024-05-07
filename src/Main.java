@@ -1,7 +1,4 @@
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 class Main {
     private static List<Student> studentStore;
@@ -167,8 +164,7 @@ class Main {
         String subName = sc.next();
 
 
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName);
-
+        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName, subName);
 
 
         studentStore.add(student);
@@ -178,10 +174,9 @@ class Main {
     // 수강생 목록 조회
     private static void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
-        Iterator<Student> iterator = studentStore.iterator();
-        while (iterator.hasNext()) {
-            Student student = iterator.next();
-            System.out.println("수강생 이름 : " + student.getStudentName());
+        // Iterator 써서 studentStore에 저장된 모든 학생들 정보 훑어서 수강생 이름이랑 번호 나오게
+        for (Student student : studentStore) {
+            System.out.println("수강생 이름 : " + student.getStudentName() + " 수강생 번호 : " + student.getStudentId());
         }
         System.out.println("\n수강생 목록 조회 성공!");
     }
@@ -238,50 +233,78 @@ class Main {
     private static void createScore() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호 점수를 만들 때 과목이 필요한게 아닌가? 으앙거ㅏ
 
+        String addSubject = "";
+
+        System.out.println("등록할 과목을 선택해 주세요.");
+        int j = 1;
+        for (Subject subject : subjectStore) {
+            if (subject.getSubjectType() == SUBJECT_TYPE_MANDATORY) {
+                System.out.print(j + "." + subject.getSubjectName() + " ");
+                j++;
+            }
+        }
+        for (Subject subject : subjectStore) {
+            if (subject.getSubjectType() == SUBJECT_TYPE_CHOICE) {
+                System.out.print(j + "." + subject.getSubjectName() + " ");
+                j++;
+            }
+        }
+
         int input = sc.nextInt();
         switch (input) {
             case 1:
                 System.out.println("Java 과목 성적을 불러오는 중입니다.");
+                addSubject = "1";
                 break;
 
             case 2:
                 System.out.println("객체지향 과목 성적을 불러오는 중입니다.");
-                //학생의 과목 성적 목록 불러오기
+                addSubject = "2";
                 break;
             case 3:
                 System.out.println("Spring 과목 성적을 불러오는 중입니다.");
-                //학생의 과목 성적 목록 불러오기
+                addSubject = "3";
                 break;
             case 4:
                 System.out.println("JPA 과목 성적을 불러오는 중입니다.");
-                //학생의 과목 성적 목록 불러오기
+                addSubject = "4";
                 break;
             case 5:
                 System.out.println("MySQL 과목 성적을 불러오는 중입니다.");
-                //학생의 과목 성적 목록 불러오기
+                addSubject = "5";
                 break;
             case 6:
                 System.out.println("디자인 패턴 과목 성적을 불러오는 중입니다.");
-                //학생의 과목 성적 목록 불러오기
+                addSubject = "6";
                 break;
             case 7:
                 System.out.println("Spring Seucrity 과목 성적을 불러오는 중입니다.");
-                //학생의 과목 성적 목록 불러오기
+                addSubject = "7";
                 break;
             case 8:
                 System.out.println("Redis 과목 성적을 불러오는 중입니다.");
-                //학생의 과목 성적 목록 불러오기
+                addSubject = "8";
                 break;
             case 9:
                 System.out.println("MongoDB 과목 성적을 불러오는 중입니다.");
-                //학생의 과목 성적 목록 불러오기
+                addSubject = "9";
                 break;
         }
 
         System.out.println("시험 점수를 입력해 주십시오.");
         String score = sc.next();
+
+        String Grade;
+
+        if (Integer.parseInt(score) >= 95) Grade = "A";
+        else if (Integer.parseInt(score) >= 90) Grade = "B";
+        else if (Integer.parseInt(score) >= 80) Grade = "C";
+        else if (Integer.parseInt(score) >= 70) Grade = "D";
+        else if (Integer.parseInt(score) >= 60) Grade = "F";
+        else Grade = "N";
+
         System.out.println("시험 점수를 등록합니다...");
-        Score sco = new Score(score);
+        Score sco = new Score(score, addSubject, studentId, Grade);
         scoreStore.add(sco);
         System.out.println("\n점수 등록 성공!"); //점수 등록을 그냥 하면 과목을 어디서 저장
     } //성적 등록할 때 과목을
@@ -296,9 +319,8 @@ class Main {
     }
 
     // 수강생의 특정 과목 회차별 등급 조회
-    private static void inquireRoundGradeBySubject() {
+    private static void inquireRoundGradeBySubject() { //돼따!
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
-
         String subject = getSubject();
 
         // 학생번호 studentId에 넣고 과목번호 subject에 넣음
@@ -306,21 +328,25 @@ class Main {
 
         int i = 1;
 
-        System.out.println("회차별 등급을 조회합니다...");
+//        이거 studentId랑 subject에 따른 다른 정보를 불러와야함
         for (Score score : scoreStore) {
-            System.out.println(i + "회차");
-            i++;
-            if (Integer.parseInt(score.getScoreId()) >= 95) {
-                System.out.println("등급 : A");
-            } else if (Integer.parseInt(score.getScoreId()) >= 90) {
-                System.out.println("등급 : B");
-            } else if (Integer.parseInt(score.getScoreId()) >= 80) {
-                System.out.println("등급 : C");
-            } else if (Integer.parseInt(score.getScoreId()) >= 70) {
-                System.out.println("등급 : D");
-            } else if (Integer.parseInt(score.getScoreId()) >= 60) {
-                System.out.println("등급 : F");
-            } else System.out.println("등급 : N");
+            if (i >= 10) break;
+            if (Objects.equals(score.getStudentId(), studentId) && Objects.equals(score.getSubjectName(), subject)) // 학생번호랑 과목 번호가 같으면
+            {
+                System.out.println(i + "회차");
+                i++;
+                if (Integer.parseInt(score.getScoreId()) >= 95) {
+                    System.out.println("등급 : " + score.getGrade());
+                } else if (Integer.parseInt(score.getScoreId()) >= 90) {
+                    System.out.println("등급 : " + score.getGrade());
+                } else if (Integer.parseInt(score.getScoreId()) >= 80) {
+                    System.out.println("등급 : " + score.getGrade());
+                } else if (Integer.parseInt(score.getScoreId()) >= 70) { //돼따 !
+                    System.out.println("등급 : " + score.getGrade());
+                } else if (Integer.parseInt(score.getScoreId()) >= 60) {
+                    System.out.println("등급 : " + score.getGrade());
+                } else System.out.println("등급 : " + score.getGrade());
+            }
         }
         System.out.println("\n등급 조회 성공!");
     }
