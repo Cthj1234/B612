@@ -139,14 +139,22 @@ public class CampManagementApplication {
             System.out.println("수강생 관리 실행 중...");
             System.out.println("1. 수강생 등록");
             System.out.println("2. 수강생 목록 조회");
-            System.out.println("3. 메인 화면 이동");
+            System.out.println("3. 수강생 이름 수정");
+            System.out.println("4. 수강생 상태 수정");
+            System.out.println("5. 상태별 수강생 목록 조회 ");
+            System.out.println("6. 수강생 삭제");
+            System.out.println("7. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
             switch (input) {
                 case 1 -> createStudent(); // 수강생 등록
                 case 2 -> inquireStudent(); // 수강생 목록 조회
-                case 3 -> flag = false; // 메인 화면 이동
+                case 3 -> changeStudentName(); // 수강생 이름 수정
+                case 4 -> changeStudentStatus(); // 수강생 상태 수정
+                case 5 -> inquireStudentByStatus();
+                case 6 -> removeStudent();
+                case 7 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -154,6 +162,68 @@ public class CampManagementApplication {
             }
         }
     }
+
+    private static void removeStudent() {
+        System.out.println("삭제할 수강생 이름을 입력해주십시오."); // 이름 겹치면 번호 입력받아야지 뭐 좀따해
+        String studentName = sc.next(); //수강생 이름 입력받기
+        studentStore.removeIf(student -> student.getStudentName().equals(studentName)); //studentStore에서 입력받은 String과 같은 student 객체를 삭제하기
+
+    }
+
+    private static void inquireStudentByStatus() {
+        boolean addFlag;
+        String stat;
+        do {
+            addFlag = true;
+            System.out.println("조회할 상태를 입력해주십시오. [Green, Red, Yellow]");
+            stat = sc.next();
+            if (stat.equals("Green") || stat.equals("Red") || stat.equals("Yellow")) {
+                break;
+            } else addFlag = false;
+            System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+
+        } while (!addFlag);
+        for (Student student : studentStore) { // studentStore를 돌며
+            if (student.getStatus().equals(stat)) { // 상태가 입력받은 것과 같으면
+                System.out.println(student.getStudentName() + " : " + stat); //수강생 이름과 상태를 출력하기
+            }
+        }
+    }
+
+    private static void changeStudentStatus() {
+        System.out.println("상태를 변경할 수강생 이름을 입력해주십시오.");
+        String studentName = sc.next(); // 수강생 이름 입력받기
+        String studentStatus; //상태 입력받기
+        boolean addFlag;
+        do {
+            addFlag = true;
+            System.out.println("변경할 상태를 입력해 주십시오. [Green, Red, Yellow]");
+            studentStatus = sc.next();
+            if (studentStatus.equals("Green") || studentStatus.equals("Red") || studentStatus.equals("Yellow")) {
+                break;
+            } else addFlag = false;
+            System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+        } while (!addFlag);
+
+        for (Student student : studentStore) { //studentStore을 탐색하다가
+            if (student.getStudentName().equals(studentName)) { // 입력받은 이름과 같은 이름이 나오면
+                student.changeStatus(studentStatus); //changeStatus 함수를 이용해 상태 변경하기 -> changeStatus 함수는 Student.java 파일에 따로 구현되어있음
+            }
+        }
+    }
+
+    private static void changeStudentName() {
+        System.out.println("이름을 변경할 수강생 이름을 입력해주십시오.");
+        String studentName = sc.next();
+        System.out.println("변경할 이름을 입력해 주십시오.");
+        String changeName = sc.next();
+        for (Student student : studentStore) {
+            if (student.getStudentName().equals(studentName)) {
+                student.changeName(changeName);
+            }
+        }
+    }
+
 
     // 수강생 등록
     private static void createStudent() {
@@ -275,7 +345,19 @@ public class CampManagementApplication {
         System.out.println("\n수강생 목록을 조회합니다...");
         for (Student students : studentStore) {
             System.out.print("[" + students.getStudentId() + "] ");
-            System.out.println("이름 : " + students.getStudentName());
+            System.out.println("이름 : " + students.getStudentName() + " 상태 : " + students.getStudentStatus());
+            System.out.println("선택한 과목 목록");
+            Set set = students.getSubjectList().keySet();
+            Iterator it = set.iterator();
+            while (it.hasNext()) {
+                String key = (String) it.next();
+                for (Subject sub : subjectStore) {
+                    if (key.equals(sub.getSubjectId())) {
+                        System.out.print(sub.getSubjectName() + " ");
+                    }
+                }
+            }
+            System.out.println();
         }
         System.out.println("\n수강생 목록 조회 성공!");
     }
@@ -288,7 +370,9 @@ public class CampManagementApplication {
             System.out.println("1. 수강생의 과목별 시험 회차 및 점수 등록");
             System.out.println("2. 수강생의 과목별 회차 점수 수정");
             System.out.println("3. 수강생의 특정 과목 회차별 등급 조회");
-            System.out.println("4. 메인 화면 이동");
+            System.out.println("4. 수강생의 과목별 평균 등급 조회");
+            System.out.println("5. 특정 상태 수강생들의 필수 과목 평균 등급 조회");
+            System.out.println("6. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
@@ -296,13 +380,22 @@ public class CampManagementApplication {
                 case 1 -> createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
                 case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
                 case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
-                case 4 -> flag = false; // 메인 화면 이동
+                case 4 -> inquireAverageGradeBySubject();
+                case 5 -> inquireAverageGradeByStatus();
+                case 6 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
                 }
             }
         }
+    }
+
+    private static void inquireAverageGradeBySubject() {
+    }
+
+    private static void inquireAverageGradeByStatus() {
+
     }
 
     // 수강생 번호 입력 받은 후 수강생이 존재하는지 확인
@@ -385,7 +478,8 @@ public class CampManagementApplication {
             subject_Name = subjectStore.get(subject_Num - 1).getSubjectName();
 
             if (!Objects.isNull(student) &&
-               student.getSubjectList().get(INDEX_TYPE_SUBJECT + subject_Num).getSubjectName().equals(subject_Name)) break;
+                    student.getSubjectList().get(INDEX_TYPE_SUBJECT + subject_Num).getSubjectName().equals(subject_Name))
+                break;
 
 
             System.out.println("해당 학생은 입력하신 과목을 수강하지 않습니다.");

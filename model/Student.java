@@ -36,4 +36,18 @@ public class Student {
     public HashMap<String, int[]> getScoreList() {
         return scoreList;
     }
+
+    public String getStudentStatus() { return studentStatus; }
+
+    public void changeName(String changeName) {
+        this.studentName = changeName;
+    }
+
+    public void changeStatus(String studentStatus) {
+        this.studentStatus = studentStatus;
+    }
+
+    public Object getStatus() {
+        return studentStatus;
+    }
 }
