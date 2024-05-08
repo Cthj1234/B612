@@ -307,7 +307,7 @@ public class CampManagementApplication {
         for (Student student : studentStore) { // studentStore을 탐색하다가
             if (student.getStudentName().equals(studentName)) { // 입력받은 이름과 같은 이름이 나오면
                 student.changeStatus(studentStatus); // changeStatus 함수를 이용해 상태 변경하기 -> changeStatus 함수는 Student.java
-                                                     // 파일에 따로 구현되어있음
+                // 파일에 따로 구현되어있음
             }
         }
     }
@@ -339,7 +339,7 @@ public class CampManagementApplication {
         System.out.println("삭제할 수강생 이름을 입력해주십시오."); // 이름 겹치면 번호 입력받아야지 뭐 좀따해
         String studentName = sc.next(); // 수강생 이름 입력받기
         studentStore.removeIf(student -> student.getStudentName().equals(studentName)); // studentStore에서 입력받은 String과
-                                                                                        // 같은 student 객체를 삭제하기
+        // 같은 student 객체를 삭제하기
 
     }
 
@@ -583,14 +583,15 @@ public class CampManagementApplication {
                 continue;
             }
 
-            subject_Name = subjectStore.get(subject_Num - 1).getSubjectName();
-
-            if (!Objects.isNull(student) &&
-                    student.getSubjectList().get(INDEX_TYPE_SUBJECT + subject_Num).getSubjectName()
-                            .equals(subject_Name))
-                break;
-
-            System.out.println("해당 학생은 입력하신 과목을 수강하지 않습니다.");
+            // 수정한 예외처리 부분
+            try {
+                subject_Name = subjectStore.get(subject_Num - 1).getSubjectName();
+                if (!Objects.isNull(student) &&
+                        student.getSubjectList().get(INDEX_TYPE_SUBJECT + subject_Num).getSubjectName().equals(subject_Name))
+                    break;
+            } catch (Exception e) {
+                System.out.println("해당 학생은 입력하신 과목을 수강하지 않습니다.");
+            }
 
         }
 
@@ -759,7 +760,7 @@ public class CampManagementApplication {
             }
         }
 
-        while(true){
+        while (true) {
             // 기능 구현 (조회할 특정 과목)
             index = 1;
             System.out.println("조회 하실 과목을 입력 해주세요 : ");
@@ -770,20 +771,20 @@ public class CampManagementApplication {
 
 
             //예외 처리 (알맞은 값만 입력 받도록)
-            try{
+            try {
                 String input = sc.next();
                 find_Sub_Num = Integer.parseInt(input);
-                if(find_Sub_Num < 1 || find_Sub_Num > 9 ){
+                if (find_Sub_Num < 1 || find_Sub_Num > 9) {
                     System.out.println("해당 과목 번호는 유효하지 않습니다.");
                     continue;
                 }
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("숫자를 입력 해주시길 바랍니다.");
                 continue;
             }
 
             System.out.println("회차별 등급을 조회합니다...");
-            if(find_Sub_Num <= 5) displayGrade_Mandatory(student,find_Sub_Num);
+            if (find_Sub_Num <= 5) displayGrade_Mandatory(student, find_Sub_Num);
             else displayGrade_Choice(student, find_Sub_Num);
 
             System.out.println("\n등급 조회 성공!");
@@ -798,7 +799,7 @@ public class CampManagementApplication {
         int[] arr = student.getScoreList().get(INDEX_TYPE_SUBJECT + findSubNum);
 
         for (int i = 0; i < arr.length; i++) {
-            if(arr[i] == -1) continue;
+            if (arr[i] == -1) continue;
             System.out.println(i + 1 + "회차 과목 점수 : " + change_Grade_Mandatory(arr[i]));
         }
     }
@@ -808,28 +809,28 @@ public class CampManagementApplication {
         int[] arr = student.getScoreList().get(INDEX_TYPE_SUBJECT + findSubNum);
 
         for (int i = 0; i < arr.length; i++) {
-            if(arr[i] == -1) continue;
+            if (arr[i] == -1) continue;
             System.out.println(i + 1 + "회차 과목 점수 : " + change_Grade_Choice(arr[i]));
         }
     }
 
     // 필수 과목 등급 반환
-    private static char change_Grade_Mandatory(int num){
-        if(num >= 95) return 'A';
-        else if(num >= 90) return 'B';
-        else if(num >= 80) return 'C';
-        else if(num >= 70) return 'D';
-        else if(num >= 60) return 'F';
+    private static char change_Grade_Mandatory(int num) {
+        if (num >= 95) return 'A';
+        else if (num >= 90) return 'B';
+        else if (num >= 80) return 'C';
+        else if (num >= 70) return 'D';
+        else if (num >= 60) return 'F';
         else return 'N';
     }
 
     // 선택 과목 등급 반환
     private static char change_Grade_Choice(int num) {
-        if(num >= 90) return 'A';
-        else if(num >= 80) return 'B';
-        else if(num >= 70) return 'C';
-        else if(num >= 60) return 'D';
-        else if(num >= 50) return 'F';
+        if (num >= 90) return 'A';
+        else if (num >= 80) return 'B';
+        else if (num >= 70) return 'C';
+        else if (num >= 60) return 'D';
+        else if (num >= 50) return 'F';
         else return 'N';
     }
 
