@@ -126,6 +126,10 @@ class Main {
             System.out.println("1. 수강생 등록");
             System.out.println("2. 수강생 목록 조회");
             System.out.println("3. 메인 화면 이동");
+            System.out.println("4. 수강생 상태 변경");
+            System.out.println("5. 수강생 이름 변경");
+            System.out.println("6. 수강생 상태별 조회");
+            System.out.println("7. 수강생 삭제");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
@@ -133,10 +137,58 @@ class Main {
                 case 1 -> createStudent(); // 수강생 등록
                 case 2 -> inquireStudent(); // 수강생 목록 조회
                 case 3 -> flag = false; // 메인 화면 이동
+                case 4 -> changeStudentStatus();
+                case 5 -> changeStudentName();
+                case 6 -> inquireStudentStat();
+                case 7 -> removeStudent();
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
                 }
+            }
+        }
+    }
+
+    private static void removeStudent() {
+        System.out.println("삭제할 수강생 이름을 입력해주십시오.");
+        String studentName = sc.next();
+        for (Student student : studentStore) {
+            if(student.getStudentName().equals(studentName)){
+                studentStore.remove(student);
+            }
+        }
+    }
+
+    private static void inquireStudentStat() {
+        System.out.println("조회할 상태를 입력해주십시오.");
+        String stat = sc.next();
+        for (Student student : studentStore) {
+            if (student.getStatus().equals(stat)) {
+                System.out.println(student.getStudentName() + " : " + stat);
+            }
+        }
+    }
+
+    private static void changeStudentName() {
+        System.out.println("이름을 변경할 수강생 이름을 입력해주십시오.");
+        String studentName = sc.next();
+        System.out.println("변경할 이름을 입력해 주십시오.");
+        String changeName = sc.next();
+        for (Student student : studentStore) {
+            if (student.getStudentName().equals(studentName)) {
+                student.changeName(changeName);
+            }
+        }
+    }
+
+    private static void changeStudentStatus() {
+        System.out.println("상태를 변경할 수강생 이름을 입력해주십시오.");
+        String studentName = sc.next();
+        System.out.println("변경할 상태를 입력해 주십시오.");
+        String studentStatus = sc.next();
+        for (Student student : studentStore) {
+            if (student.getStudentName().equals(studentName)) {
+                student.changeStatus(studentStatus);
             }
         }
     }
@@ -150,21 +202,24 @@ class Main {
         System.out.println("등록할 과목을 선택해 주십시오.");
         int i = 1;
         for (Subject subject : subjectStore) {
-            if (subject.getSubjectType() == SUBJECT_TYPE_MANDATORY) {
+            if (subject.getSubjectType().equals(SUBJECT_TYPE_MANDATORY)) {
                 System.out.print(i + "." + subject.getSubjectName() + " ");
                 i++;
             }
         }
         for (Subject subject : subjectStore) {
-            if (subject.getSubjectType() == SUBJECT_TYPE_CHOICE) {
+            if (subject.getSubjectType().equals(SUBJECT_TYPE_CHOICE)) {
                 System.out.print(i + "." + subject.getSubjectName() + " ");
                 i++;
             }
         }
         String subName = sc.next();
 
+        System.out.println("학생의 상태를 입력해 주십시오.");
+        String stat = sc.next();
 
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName, subName);
+
+        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName, subName, stat);
 
 
         studentStore.add(student);
@@ -176,7 +231,7 @@ class Main {
         System.out.println("\n수강생 목록을 조회합니다...");
         // Iterator 써서 studentStore에 저장된 모든 학생들 정보 훑어서 수강생 이름이랑 번호 나오게
         for (Student student : studentStore) {
-            System.out.println("수강생 이름 : " + student.getStudentName() + " 수강생 번호 : " + student.getStudentId());
+            System.out.println("수강생 번호 : " + student.getStudentId() + " 이름 : " + student.getStudentName() + " 상태 : " + student.getStatus() + " 선택한 과목명 : " + student.getStudentSubject());
         }
         System.out.println("\n수강생 목록 조회 성공!");
     }
