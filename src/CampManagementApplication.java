@@ -162,7 +162,20 @@ public class CampManagementApplication {
         String studentName = sc.next();
         sc.nextLine();
 
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
+        boolean addFlag;
+        String status;
+        do {
+            addFlag = true;
+
+            System.out.println("수강생 상태 입력[Green, Red, Yellow]: ");
+            status = sc.next();
+            if (status.equals("Green") || status.equals("Red") || status.equals("Yellow")) {
+                break;
+            } else addFlag = false;
+            System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+
+        } while (!addFlag);
+        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName, status); // 수강생 인스턴스 생성 예시 코드
         // addSubjectList(student); 원래 이 코드를 사용했는데 메서드가 너무 많아진 것 같아 아래와 같이 수정
         addSubjects(student, SUBJECT_TYPE_MANDATORY, MANDATORY_MIN); // 필수 과목 입력받기
         addSubjects(student, SUBJECT_TYPE_CHOICE, CHOICE_MIN); // 선택 과목 입력받기
@@ -728,11 +741,96 @@ public class CampManagementApplication {
 
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
+        int index = 1;
+        int find_Sub_Num = 0;
+        Student student = null;
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
 
-        System.out.println("회차별 등급을 조회합니다...");
-        // 기능 구현
-        System.out.println("\n등급 조회 성공!");
+        while (studentId.equals("Invalid")) {
+            System.out.println("해당 학생은 존재 하지 않습니다.");
+            studentId = getStudentId();
+        }
+
+        // 해당 학생의 객체 student에 저장
+        for (Student tmp_student : studentStore) {
+            if (tmp_student.getStudentId().equals(studentId)) {
+                student = tmp_student;
+                break;
+            }
+        }
+
+        while(true){
+            // 기능 구현 (조회할 특정 과목)
+            index = 1;
+            System.out.println("조회 하실 과목을 입력 해주세요 : ");
+            // 과목 번호, 과목 이름 출력
+            for (Subject sub : subjectStore) {
+                System.out.println(index++ + ". " + sub.getSubjectName());
+            }
+
+
+            //예외 처리 (알맞은 값만 입력 받도록)
+            try{
+                String input = sc.next();
+                find_Sub_Num = Integer.parseInt(input);
+                if(find_Sub_Num < 1 || find_Sub_Num > 9 ){
+                    System.out.println("해당 과목 번호는 유효하지 않습니다.");
+                    continue;
+                }
+            }catch (NumberFormatException e){
+                System.out.println("숫자를 입력 해주시길 바랍니다.");
+                continue;
+            }
+
+            System.out.println("회차별 등급을 조회합니다...");
+            if(find_Sub_Num <= 5) displayGrade_Mandatory(student,find_Sub_Num);
+            else displayGrade_Choice(student, find_Sub_Num);
+
+            System.out.println("\n등급 조회 성공!");
+
+            break;
+        }
+
+    }
+
+    // 해당 학생의 필수 과목 점수 조회
+    private static void displayGrade_Mandatory(Student student, int findSubNum) {
+        int[] arr = student.getScoreList().get(INDEX_TYPE_SUBJECT + findSubNum);
+
+        for (int i = 0; i < arr.length; i++) {
+            if(arr[i] == -1) continue;
+            System.out.println(i + 1 + "회차 과목 점수 : " + change_Grade_Mandatory(arr[i]));
+        }
+    }
+
+    // 해당 학생의 선택 과목 점수 조회
+    private static void displayGrade_Choice(Student student, int findSubNum) {
+        int[] arr = student.getScoreList().get(INDEX_TYPE_SUBJECT + findSubNum);
+
+        for (int i = 0; i < arr.length; i++) {
+            if(arr[i] == -1) continue;
+            System.out.println(i + 1 + "회차 과목 점수 : " + change_Grade_Choice(arr[i]));
+        }
+    }
+
+    // 필수 과목 등급 반환
+    private static char change_Grade_Mandatory(int num){
+        if(num >= 95) return 'A';
+        else if(num >= 90) return 'B';
+        else if(num >= 80) return 'C';
+        else if(num >= 70) return 'D';
+        else if(num >= 60) return 'F';
+        else return 'N';
+    }
+
+    // 선택 과목 등급 반환
+    private static char change_Grade_Choice(int num) {
+        if(num >= 90) return 'A';
+        else if(num >= 80) return 'B';
+        else if(num >= 70) return 'C';
+        else if(num >= 60) return 'D';
+        else if(num >= 50) return 'F';
+        else return 'N';
     }
 
 }
