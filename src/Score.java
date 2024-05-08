@@ -32,7 +32,6 @@ public class Score {
         return time;
     }
 
-
     public void changeScore(String score) {
         this.scoreId = score;
     }
