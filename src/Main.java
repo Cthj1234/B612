@@ -792,11 +792,7 @@ class Main {
         for (Score score : scoreStore) {
             if (score.getStudentId().equals(studentId) && score.getSubjectName().equals(subjectName) && score.getTime() == time) {
                 score.changeScore(sco);
-                score.changeGrade(Grade); //네네 제꺼는 참고해서 변형하는 식이 나을듯
-                //제일 중요한 과목 선택 부분이 없어서
-                //과목 선택을 안했기에 다른 부분도 합치면 다 오류날거라서
-                //그쵸
-                // 네네 그럴거에요
+                score.changeGrade(Grade);
             }
         }
         System.out.println("시험 점수를 수정합니다...");
