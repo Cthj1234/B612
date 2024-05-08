@@ -245,6 +245,7 @@ class Main {
             System.out.println("2. 수강생의 과목별 회차 점수 수정");
             System.out.println("3. 수강생의 특정 과목 회차별 등급 조회");
             System.out.println("4. 메인 화면 이동");
+            System.out.println("5. 과목별 평균 등급 조회");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
@@ -253,12 +254,17 @@ class Main {
                 case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
                 case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
                 case 4 -> flag = false; // 메인 화면 이동
+                case 5 -> inquireAverageGrade();
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
                 }
             }
         }
+    }
+
+    private static void inquireAverageGrade() {
+
     }
 
     private static String getStudentId() {
@@ -305,44 +311,44 @@ class Main {
             }
         }
 
-        int input = sc.nextInt();
+        String input = sc.next();
         switch (input) {
-            case 1:
+            case "Java":
                 System.out.println("Java 과목 성적을 불러오는 중입니다.");
-                addSubject = "1";
+                addSubject = "Java";
                 break;
 
-            case 2:
+            case "객체지향":
                 System.out.println("객체지향 과목 성적을 불러오는 중입니다.");
-                addSubject = "2";
+                addSubject = "객체지향";
                 break;
-            case 3:
+            case "Spring":
                 System.out.println("Spring 과목 성적을 불러오는 중입니다.");
-                addSubject = "3";
+                addSubject = "Spring";
                 break;
-            case 4:
+            case "JPA":
                 System.out.println("JPA 과목 성적을 불러오는 중입니다.");
-                addSubject = "4";
+                addSubject = "JPA";
                 break;
-            case 5:
+            case "MySQL":
                 System.out.println("MySQL 과목 성적을 불러오는 중입니다.");
-                addSubject = "5";
+                addSubject = "MySQL";
                 break;
-            case 6:
+            case "디자인 패턴":
                 System.out.println("디자인 패턴 과목 성적을 불러오는 중입니다.");
-                addSubject = "6";
+                addSubject = "디자인 패턴";
                 break;
-            case 7:
+            case "Spring Security":
                 System.out.println("Spring Seucrity 과목 성적을 불러오는 중입니다.");
-                addSubject = "7";
+                addSubject = "Spring Security";
                 break;
-            case 8:
+            case "Redis":
                 System.out.println("Redis 과목 성적을 불러오는 중입니다.");
-                addSubject = "8";
+                addSubject = "Redis";
                 break;
-            case 9:
+            case "MongoDB":
                 System.out.println("MongoDB 과목 성적을 불러오는 중입니다.");
-                addSubject = "9";
+                addSubject = "MongoDB";
                 break;
         }
 
@@ -360,16 +366,39 @@ class Main {
 
         System.out.println("시험 점수를 등록합니다...");
         Score sco = new Score(score, addSubject, studentId, Grade);
-        scoreStore.add(sco);
-        System.out.println("\n점수 등록 성공!"); //점수 등록을 그냥 하면 과목을 어디서 저장
+        sco.plusTime();
+        if (sco.getTime() <= 10) {
+            scoreStore.add(sco);
+            System.out.println("\n점수 등록 성공!");
+        }
+        else System.out.println("점수 등록 실패, 10회차를 넘어갑니다.");
     } //성적 등록할 때 과목을
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (수정할 과목 및 회차, 점수)
+        String subjectName = getSubject();
+        System.out.println("수정할 회차를 입력해주십시오.");
+        int time = sc.nextInt();
+        System.out.println("수정할 점수를 입력해주십시오.");
+        String sco = sc.next();
+
+        String Grade;
+
+        if (Integer.parseInt(sco) >= 95) Grade = "A";
+        else if (Integer.parseInt(sco) >= 90) Grade = "B";
+        else if (Integer.parseInt(sco) >= 80) Grade = "C";
+        else if (Integer.parseInt(sco) >= 70) Grade = "D";
+        else if (Integer.parseInt(sco) >= 60) Grade = "F";
+        else Grade = "N";
+
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId) && score.getSubjectName().equals(subjectName) && score.getTime() == time) {
+                score.changeScore(sco);
+                score.changeGrade(Grade);
+            }
+        }
         System.out.println("시험 점수를 수정합니다...");
-        // 기능 구현
         System.out.println("\n점수 수정 성공!");
     }
 
@@ -381,15 +410,13 @@ class Main {
         // 학생번호 studentId에 넣고 과목번호 subject에 넣음
         // 요거에 해당하는 데이터만 불러오기.
 
-        int i = 1;
 
 //        이거 studentId랑 subject에 따른 다른 정보를 불러와야함
         for (Score score : scoreStore) {
-            if (i >= 10) break;
+            if(score.getTime() >= 10) break;
             if (Objects.equals(score.getStudentId(), studentId) && Objects.equals(score.getSubjectName(), subject)) // 학생번호랑 과목 번호가 같으면
             {
-                System.out.println(i + "회차");
-                i++;
+                System.out.println(score.getTime() + "회차");
                 if (Integer.parseInt(score.getScoreId()) >= 95) {
                     System.out.println("등급 : " + score.getGrade());
                 } else if (Integer.parseInt(score.getScoreId()) >= 90) {
