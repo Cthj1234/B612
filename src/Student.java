@@ -1,5 +1,3 @@
-package camp.model;
-
 import java.util.HashMap;
 
 

@@ -1,9 +1,3 @@
-package camp;
-
-import camp.model.Score;
-import camp.model.Student;
-import camp.model.Subject;
-
 import java.util.*;
 
 public class CampManagementApplication {
