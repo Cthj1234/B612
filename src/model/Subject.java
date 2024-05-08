@@ -1,4 +1,4 @@
-package model;
+package camp.src.model;
 
 public class Subject {
     private String subjectId;

@@ -1,4 +1,4 @@
-package model;
+package camp.src.model;
 
 import java.util.HashMap;
 

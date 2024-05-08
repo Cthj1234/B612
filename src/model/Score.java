@@ -1,4 +1,4 @@
-package model;
+package camp.src.model;
 
 public class Score {
     private String scoreId;
