@@ -137,10 +137,10 @@ class Main {
                 case 1 -> createStudent(); // 수강생 등록
                 case 2 -> inquireStudent(); // 수강생 목록 조회
                 case 3 -> flag = false; // 메인 화면 이동
-                case 4 -> changeStudentStatus();
-                case 5 -> changeStudentName();
-                case 6 -> inquireStudentStat();
-                case 7 -> removeStudent();
+                case 4 -> changeStudentStatus(); //수강생 상태 변경
+                case 5 -> changeStudentName(); // 수강생 이름 변경
+                case 6 -> inquireStudentStat(); // 수강생 상태별 조회
+                case 7 -> removeStudent(); //수강생 삭제
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -151,40 +151,40 @@ class Main {
 
     private static void removeStudent() {
         System.out.println("삭제할 수강생 이름을 입력해주십시오.");
-        String studentName = sc.next();
-        studentStore.removeIf(student -> student.getStudentName().equals(studentName));
+        String studentName = sc.next(); //수강생 이름 입력받기
+        studentStore.removeIf(student -> student.getStudentName().equals(studentName)); //studentStore에서 입력받은 String과 같은 student 객체를 삭제하기
     }
 
     private static void inquireStudentStat() {
         System.out.println("조회할 상태를 입력해주십시오.");
-        String stat = sc.next();
-        for (Student student : studentStore) {
-            if (student.getStatus().equals(stat)) {
-                System.out.println(student.getStudentName() + " : " + stat);
+        String stat = sc.next(); //수강생 상태 입력받기
+        for (Student student : studentStore) { // studentStore를 돌며
+            if (student.getStatus().equals(stat)) { // 상태가 입력받은 것과 같으면
+                System.out.println(student.getStudentName() + " : " + stat); //수강생 이름과 상태를 출력하기
             }
         }
     }
 
     private static void changeStudentName() {
         System.out.println("이름을 변경할 수강생 이름을 입력해주십시오.");
-        String studentName = sc.next();
+        String studentName = sc.next(); //변경할 수강생 이름 입력하기
         System.out.println("변경할 이름을 입력해 주십시오.");
-        String changeName = sc.next();
-        for (Student student : studentStore) {
-            if (student.getStudentName().equals(studentName)) {
-                student.changeName(changeName);
+        String changeName = sc.next(); //바꿀 수강생 이름 입력하기
+        for (Student student : studentStore) { //studentStore을 돌며
+            if (student.getStudentName().equals(studentName)) { //변경할 수강생 이름과 같은 student 객체를 찾아서
+                student.changeName(changeName); //changeName 함수로 바꾸기 -> 요건 Student.java 파일에서 따로 함수를 만들어 주었음
             }
         }
     }
 
     private static void changeStudentStatus() {
         System.out.println("상태를 변경할 수강생 이름을 입력해주십시오.");
-        String studentName = sc.next();
+        String studentName = sc.next(); // 수강생 이름 입력받기
         System.out.println("변경할 상태를 입력해 주십시오.");
-        String studentStatus = sc.next();
-        for (Student student : studentStore) {
-            if (student.getStudentName().equals(studentName)) {
-                student.changeStatus(studentStatus);
+        String studentStatus = sc.next(); //상태 입력받기
+        for (Student student : studentStore) { //studentStore을 탐색하다가
+            if (student.getStudentName().equals(studentName)) { // 입력받은 이름과 같은 이름이 나오면
+                student.changeStatus(studentStatus); //changeStatus 함수를 이용해 상태 변경하기 -> changeStatus 함수는 Student.java 파일에 따로 구현되어있음
             }
         }
     }
@@ -193,42 +193,44 @@ class Main {
     private static void createStudent() {
         System.out.println("\n수강생을 등록합니다...");
         System.out.print("수강생 이름 입력: ");
-        String studentName = sc.next();
+        String studentName = sc.next(); // 학생 이름 입력받기
 
-        System.out.println("등록할 과목을 선택해 주십시오.");
+        System.out.println("등록할 과목을 선택해 주십시오."); // 과목 선택하기
         int i = 1;
-        for (Subject subject : subjectStore) {
-            if (subject.getSubjectType().equals(SUBJECT_TYPE_MANDATORY)) {
-                System.out.print(i + "." + subject.getSubjectName() + " ");
-                i++;
+        for (Subject subject : subjectStore) { // subjectStore을 돌며
+            if (subject.getSubjectType().equals(SUBJECT_TYPE_MANDATORY)) { //필수 과목이면
+                System.out.print(i + "." + subject.getSubjectName() + " "); // 1. Java 2. Spring 이런식으로 출력하기
+                i++; // i 는 그냥 앞에 번호를 붙이기 위한 변수
             }
         }
-        for (Subject subject : subjectStore) {
-            if (subject.getSubjectType().equals(SUBJECT_TYPE_CHOICE)) {
-                System.out.print(i + "." + subject.getSubjectName() + " ");
-                i++;
+        for (Subject subject : subjectStore) { // subjectStore을 돌며
+            if (subject.getSubjectType().equals(SUBJECT_TYPE_CHOICE)) { //선택 과목이면
+                System.out.print(i + "." + subject.getSubjectName() + " "); //5. Redis 6.mongoDB 이런식으로 출력하기
+                i++; //
             }
         }
-        String subName = sc.next();
+        String subName = sc.next(); // 등록할 과목 입력받기
+        // 그걸 구현 안했어요 네네 네네
 
         System.out.println("학생의 상태를 입력해 주십시오.");
-        String stat = sc.next();
+        String stat = sc.next(); // 학생 상태 입력받기
 
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName, subName, stat);
+        // 학생 객체 생성 Student 안에                                  학생 이름, 듣는 과목, 상태가 만들어짐
 
 
-        studentStore.add(student);
+        studentStore.add(student); //studentStore에 만들어진 객체를 넣어 저장함
         System.out.println("수강생 등록 성공!\n");
     }
 
     // 수강생 목록 조회
-    private static void inquireStudent() {
+    private static void inquireStudent() { //수강생 목록 조회
         System.out.println("\n수강생 목록을 조회합니다...");
-        // Iterator 써서 studentStore에 저장된 모든 학생들 정보 훑어서 수강생 이름이랑 번호 나오게
-        for (Student student : studentStore) {
+        for (Student student : studentStore) { //studentStore을 돌며 모든 수강생 출력
             System.out.println("수강생 번호 : " + student.getStudentId() + " 이름 : " + student.getStudentName() + " 상태 : " + student.getStatus() + " 선택한 과목명 : " + student.getStudentSubject());
-        }
+        } // 출력 형식 수강생 번호 : 1 이름 : Jack 상태 : Green 선택한 과목명 : Java
+            // 근데 이거 제가 과목 선
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
@@ -671,7 +673,7 @@ class Main {
         int j = 1;
         for (Subject subject : subjectStore) {
             if (subject.getSubjectType().equals(SUBJECT_TYPE_MANDATORY)) {
-                System.out.print(j + "." + subject.getSubjectName() + " ");
+                System.out.print(j + "." + subject.getSubjectName() + " "); //그쵸 그것도 예외처리 해야되는데 그냥 그 등록될때 count가 추가되서 등록되게 해서 중복 안되게 했어요
                 j++;
             }
         }
@@ -705,7 +707,7 @@ class Main {
             }
         }
 
-        String input = sc.next();
+        String input = sc.next(); // 여기서도 등록할 과목 입력받아서
         addSubject = switch (input) {
             case "Java" -> {
                 System.out.println("Java 과목 성적을 불러오는 중입니다.");
@@ -747,10 +749,11 @@ class Main {
         };
 
         System.out.println("시험 점수를 입력해 주십시오.");
-        String score = sc.next();
+        String score = sc.next(); // 시험 점수 입력받은 다음에
 
         String Grade;
 
+        //요 아랜 자동으로 등급 설정해주는 부분
         if (Integer.parseInt(score) >= 95) Grade = "A";
         else if (Integer.parseInt(score) >= 90) Grade = "B";
         else if (Integer.parseInt(score) >= 80) Grade = "C";
@@ -759,6 +762,8 @@ class Main {
         else Grade = "N";
 
         System.out.println("시험 점수를 등록합니다...");
+
+        // sco라는 객체를 만드는데 sco 안에 점수, 과목, 학생 번호, 등급 이렇게 들어가요
         Score sco = new Score(score, addSubject, studentId, Grade);
         if (sco.getTime() <= 10) {
             scoreStore.add(sco);
@@ -769,7 +774,7 @@ class Main {
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        String subjectName = getSubject();
+        String subjectName = getSubject(); // 이게 수정받을 과목 입력받는 함수
         System.out.println("수정할 회차를 입력해주십시오.");
         int time = sc.nextInt();
         System.out.println("수정할 점수를 입력해주십시오.");
@@ -787,7 +792,11 @@ class Main {
         for (Score score : scoreStore) {
             if (score.getStudentId().equals(studentId) && score.getSubjectName().equals(subjectName) && score.getTime() == time) {
                 score.changeScore(sco);
-                score.changeGrade(Grade);
+                score.changeGrade(Grade); //네네 제꺼는 참고해서 변형하는 식이 나을듯
+                //제일 중요한 과목 선택 부분이 없어서
+                //과목 선택을 안했기에 다른 부분도 합치면 다 오류날거라서
+                //그쵸
+                // 네네 그럴거에요
             }
         }
         System.out.println("시험 점수를 수정합니다...");
