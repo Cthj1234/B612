@@ -502,7 +502,7 @@ public class CampManagementApplication {
 
         for (int i = 0; i < arr.length; i++) {
             if(arr[i] == -1) continue;
-            System.out.println(i + "회차 과목 점수 : " + change_Grade_Choice(arr[i]));
+            System.out.println(i + 1 + "회차 과목 점수 : " + change_Grade_Choice(arr[i]));
         }
     }
 
