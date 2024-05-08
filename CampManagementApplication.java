@@ -1,5 +1,6 @@
 package camp;
 
+import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
 
@@ -9,6 +10,7 @@ public class CampManagementApplication {
     // 데이터 저장소
     private static List<Student> studentStore;
     private static List<Subject> subjectStore;
+    private static List<Score> scoreStore;
 
     // 과목 타입
     private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
@@ -84,6 +86,7 @@ public class CampManagementApplication {
                         SUBJECT_TYPE_CHOICE
                 )
         );
+        scoreStore = new ArrayList<>();
 
     }
 
@@ -345,11 +348,13 @@ public class CampManagementApplication {
             System.out.print("[" + students.getStudentId() + "] ");
             System.out.println("이름 : " + students.getStudentName() + " 상태 : " + students.getStudentStatus());
             System.out.println("선택한 과목 목록");
-            Set<String> set = students.getSubjectList().keySet();
-            for (String key : set) {
+            Set set = students.getSubjectList().keySet();
+            Iterator it = set.iterator();
+            while (it.hasNext()) {
+                String key = (String) it.next();
                 for (Subject sub : subjectStore) {
                     if (key.equals(sub.getSubjectId())) {
-                        System.out.print(" [" + sub.getSubjectName() + "] ");
+                        System.out.print(sub.getSubjectName() + " ");
                     }
                 }
             }
@@ -407,16 +412,14 @@ public class CampManagementApplication {
             switch (sub.getSubjectName()) {
                 case "Java", "객체지향", "Spring", "JPA", "MySQL":
                     if (student != null && student.getScoreList().get(sub.getSubjectName()) != null) {
-                        System.out.print(sub.getSubjectName() + " 과목 평균 등급 :");
+                        System.out.print(sub.getSubjectName() + " 과목 평균 등급 : ");
                         averageGradeMandotary(student, sub.getSubjectId());
-                        System.out.println();
                     }
                     break;
                 case "디자인 패턴", "Spring Security", "Redis", "MongoDB":
                     if (student != null && student.getSubjectList().get(sub.getSubjectName()) != null) {
-                        System.out.print(sub.getSubjectName() + " 과목 평균 등급 :");
+                        System.out.print(sub.getSubjectName() + " 과목 평균 등급 : ");
                         averageGradeChoice(student, sub.getSubjectId());
-                        System.out.println();
                     }
                     break;
 
@@ -426,32 +429,32 @@ public class CampManagementApplication {
 
     private static void averageGradeChoice(Student student, String subjectId) {
         double sum = 0;
-        double average;
+        double average = 0;
         int count = 0;
         int[] arr = student.getScoreList().get(subjectId);
 
-        for (int j : arr) {
-            if (j == -1) continue;
-            sum += j;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == -1) continue;
+            sum += arr[i];
             count++;
         }
         average = sum / count;
-        System.out.print(" " + changeGradeChoice(average) + " ");
+        System.out.println(changeGradeChoice(average));
     }
 
     private static void averageGradeMandotary(Student student, String subjectId) {
         double sum = 0;
-        double average;
+        double average = 0;
         int count = 0;
         int[] arr = student.getScoreList().get(subjectId);
 
-        for (int j : arr) {
-            if (j == -1) continue;
-            sum += j;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == -1) continue;
+            sum += arr[i];
             count++;
         }
         average = sum / count;
-        System.out.print(" " + changeGradeMandatory(average) + " ");
+        System.out.println(changeGradeMandatory(average));
 
     }
 
@@ -474,32 +477,25 @@ public class CampManagementApplication {
     }
 
     private static void inquireAverageGradeByStatus() {
-        System.out.println("조회할 상태를 입력해주십시오. [Green, Red, Yellow]");
-        String status;
-        boolean addFlag;
-        do {
-            addFlag = true;
-            status = sc.next();
-            if (status.equals("Green") || status.equals("Red") || status.equals("Yellow")) {
-                break;
-            } else addFlag = false;
-            System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
-        } while (!addFlag);
-        for (Student student : studentStore) {
-            if (student.getStatus().equals(status)) {
-                System.out.println(student.getStudentName() + " 님의 평균 과목 등급 ");
-                Set<String> set = student.getSubjectList().keySet();
-                for (String key : set) {
-                    for (Subject sub : subjectStore) {
-                        if (key.equals(sub.getSubjectId())) {
-                            System.out.print(sub.getSubjectName() + " 평균 등급 :");
-                            averageGradeMandotary(student, sub.getSubjectId());
-                            System.out.println();
-                        }
-                    }
-                }
-            }
-        }
+//        System.out.println("조회할 상태를 입력해주십시오.");
+//        String status;
+//        boolean addFlag;
+//        do {
+//            addFlag = true;
+//            status = sc.next();
+//            if (status.equals("Green") || status.equals("Red") || status.equals("Yellow")) {
+//                break;
+//            } else addFlag = false;
+//            System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+//        } while (!addFlag);
+//
+//        for (Student student : studentStore) {
+//            if (student.getStudentId().equals(status)) {
+//                System.out.println(student.getStudentName() + " 님의 평균 과목 등급 ");
+//                for (Score score : scoreStore) {
+//                }
+//            }
+//        }
 
     }
 
@@ -528,7 +524,7 @@ public class CampManagementApplication {
         int subject_Num;
 
         // 입력받은 과목의 이름. (scoreList에서 key값으로 사용)
-        String subject_Name;
+        String subject_Name = "";
 
         while (studentId.equals("Invalid")) {
             System.out.println("해당 학생은 존재 하지 않습니다.");
@@ -550,7 +546,7 @@ public class CampManagementApplication {
             boolean check = true;
 
 
-            String line;
+            String line = "";
 
             System.out.println("점수 등록 하실 과목의 숫자를 입력 하세요.");
 
