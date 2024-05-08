@@ -228,9 +228,10 @@ public class CampManagementApplication {
         // 해당 학생의 subjectList를 설정하는 for문입니다.
         // 해당하는 과목의 이름과, 10개의 배열로 저장합니다.
         // 여기서 -1로 채워두는 이유는 중복 등록 방지입니다 ex) 디자인패턴 3회차에 0점으로 등록 되어있으면 수정 외엔 다시 등록 불가능
-        int[] arr = new int[10];
-        Arrays.fill(arr, -1);
+
         for (String subject : student.getSubjectList().keySet()) {
+            int[] arr = new int[10];
+            Arrays.fill(arr, -1);
             student.getScoreList().put(subject, arr);
         }
 
