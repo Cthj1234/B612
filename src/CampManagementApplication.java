@@ -15,6 +15,9 @@ public class CampManagementApplication {
     private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
     private static String SUBJECT_TYPE_CHOICE = "CHOICE";
 
+    private static int MANDATORY_MIN = 3;
+    private static int CHOICE_MIN = 2;
+
     // index 관리 필드
     private static int studentIndex;
     private static final String INDEX_TYPE_STUDENT = "ST";
@@ -163,8 +166,8 @@ public class CampManagementApplication {
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
         // addSubjectList(student); 원래 이 코드를 사용했는데 메서드가 너무 많아진 것 같아 아래와 같이 수정
-        addSubjects(student, SUBJECT_TYPE_MANDATORY, 3); // 필수 과목 입력받기
-        addSubjects(student, SUBJECT_TYPE_CHOICE, 2); // 선택 과목 입력받기
+        addSubjects(student, SUBJECT_TYPE_MANDATORY, MANDATORY_MIN); // 필수 과목 입력받기
+        addSubjects(student, SUBJECT_TYPE_CHOICE, CHOICE_MIN); // 선택 과목 입력받기
         studentStore.add(student);
 
 
@@ -185,8 +188,12 @@ public class CampManagementApplication {
             System.out.println("=========================");
             System.out.println("과목 번호를 입력하세요 (숫자로 입력)");
             String mandatorySubject = sc.nextLine();
+
             // 공백 또는 쉼표로 구분받기
             String[] subjectArr = mandatorySubject.split("[, ]");
+            // 동일한 값 입력 시 제거
+            subjectArr = Arrays.stream(subjectArr).distinct().toArray(String[]::new);
+
             if (subjectArr.length < minNum) {
                 System.out.println(subjectType + " 과목은 " + minNum + "개 이상 선택해야 합니다. ");
                 addFlag = false;
@@ -206,7 +213,7 @@ public class CampManagementApplication {
                     }
                     // 기존 과목 리스트에 일치하는 항목이 없을 때
                     if (!addFlag) {
-                        System.out.println("올바른 번호를 입력해주세요!");
+                        System.out.println("존재하지 않는 과목 번호가 포함되어 있습니다!");
                         break;
                     }
                 }
@@ -403,7 +410,7 @@ public class CampManagementApplication {
     // 특정 학생이 수강하는 과목명과 과목 번호 출력
     public static void printStudentSubjects(Student student) {
         System.out.println("=========================");
-        // Iterator<String> keys = student.getSubjectList().keySet().iterator();
+
         // 과목 번호 순으로 해시맵 오름차순 정렬
         List<String> mapKey = new ArrayList<>(student.getSubjectList().keySet());
         Collections.sort(mapKey);
