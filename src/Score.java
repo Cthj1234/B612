@@ -3,7 +3,7 @@ public class Score {
     private String subjectName;
     private String studentId;
     private String Grade;
-    private int time = 0;
+    private int time = 1;
 
 
     public Score(String seq, String subjectName, String studentId, String grade) {
@@ -32,9 +32,6 @@ public class Score {
         return time;
     }
 
-    public void plusTime() {
-        this.time += 1;
-    }
 
     public void changeScore(String score) {
         this.scoreId = score;

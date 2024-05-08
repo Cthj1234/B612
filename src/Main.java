@@ -153,7 +153,7 @@ class Main {
         System.out.println("삭제할 수강생 이름을 입력해주십시오.");
         String studentName = sc.next();
         for (Student student : studentStore) {
-            if(student.getStudentName().equals(studentName)){
+            if (student.getStudentName().equals(studentName)) {
                 studentStore.remove(student);
             }
         }
@@ -264,6 +264,110 @@ class Main {
     }
 
     private static void inquireAverageGrade() {
+        double sum = 0; // 이거 애매한데 ;
+        double count = 0;
+        double averJava = 0;
+        double averOri = 0;
+        // 하나하나 다 줘야하나? sum/count를 >??
+        String studentId = getStudentId();
+        System.out.println("과목별 평균 점수를 불러오는 중입니다.");
+        String averageGrade = "";
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId)) {
+                //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
+                //과목 이름이 Java면 회차별 성적
+                switch (score.getSubjectName()) {
+                    case "Java":
+                        count++; //회차 대신
+                        switch (score.getGrade()) {
+                            case "A" -> sum += 10;
+                            case "B" -> sum += 9;
+                            case "C" -> sum += 8;
+                            case "D" -> sum += 7;
+                            case "F" -> sum += 6;
+                            case "N" -> sum += 5;
+                        }
+                        System.out.println("j" + sum);
+                        System.out.println("j" + count);
+                        System.out.println(sum / count);
+                        break;
+                    case "객체지향":
+                        if (score.getGrade().equals("A")) sum += 10;
+                        else if (score.getGrade().equals("B")) sum += 9;
+                        else if (score.getGrade().equals("C")) sum += 8;
+                        else if (score.getGrade().equals("D")) sum += 7;
+                        else if (score.getGrade().equals("F")) sum += 6;
+                        else if (score.getGrade().equals("N")) sum += 5;
+                        System.out.println("s" + sum);
+                        System.out.println("s" + count);
+                        System.out.println(sum / count);
+                        break;
+                    case "Spring":
+                        if (score.getGrade().equals("A")) sum += 10;
+                        else if (score.getGrade().equals("B")) sum += 9;
+                        else if (score.getGrade().equals("C")) sum += 8;
+                        else if (score.getGrade().equals("D")) sum += 7;
+                        else if (score.getGrade().equals("F")) sum += 6; // 이게 맞나; //과목 성적이 을 sum에 다 더하고
+                        else if (score.getGrade().equals("N")) sum += 5;
+                        break;
+                    case "JPA":
+                        if (score.getGrade().equals("A")) sum += 10;
+                        else if (score.getGrade().equals("B")) sum += 9;
+                        else if (score.getGrade().equals("C")) sum += 8;
+                        else if (score.getGrade().equals("D")) sum += 7;
+                        else if (score.getGrade().equals("F")) sum += 6;
+                        else if (score.getGrade().equals("N")) sum += 5;
+                        break;
+                    case "MySQL":
+                        if (score.getGrade().equals("A")) sum += 10;
+                        else if (score.getGrade().equals("B")) sum += 9;
+                        else if (score.getGrade().equals("C")) sum += 8;
+                        else if (score.getGrade().equals("D")) sum += 7;
+                        else if (score.getGrade().equals("F")) sum += 6;
+                        else if (score.getGrade().equals("N")) sum += 5;
+                        break;
+                    case "디자인패턴":
+                        if (score.getGrade().equals("A")) sum += 10;
+                        else if (score.getGrade().equals("B")) sum += 9;
+                        else if (score.getGrade().equals("C")) sum += 8;
+                        else if (score.getGrade().equals("D")) sum += 7;
+                        else if (score.getGrade().equals("F")) sum += 6;
+                        else if (score.getGrade().equals("N")) sum += 5;
+                        break;
+                    case "Spring Security":
+                        if (score.getGrade().equals("A")) sum += 10;
+                        else if (score.getGrade().equals("B")) sum += 9;
+                        else if (score.getGrade().equals("C")) sum += 8;
+                        else if (score.getGrade().equals("D")) sum += 7;
+                        else if (score.getGrade().equals("F")) sum += 6;
+                        else if (score.getGrade().equals("N")) sum += 5;
+                        break;
+                    case "Redis":
+                        if (score.getGrade().equals("A")) sum += 10;
+                        else if (score.getGrade().equals("B")) sum += 9;
+                        else if (score.getGrade().equals("C")) sum += 8;
+                        else if (score.getGrade().equals("D")) sum += 7;
+                        else if (score.getGrade().equals("F")) sum += 6;
+                        else if (score.getGrade().equals("N")) sum += 5;
+                        break;
+                    case "MongoDB":
+                        if (score.getGrade().equals("A")) sum += 10;
+                        else if (score.getGrade().equals("B")) sum += 9;
+                        else if (score.getGrade().equals("C")) sum += 8;
+                        else if (score.getGrade().equals("D")) sum += 7;
+                        else if (score.getGrade().equals("F")) sum += 6;
+                        else if (score.getGrade().equals("N")) sum += 5;
+                        break;
+                }
+//                if(sum/count > 9) averageGrade = "A";
+//                else if (sum/count > 8) averageGrade = "B";
+//                else if (sum/count > 7) averageGrade = "C";
+//                else if (sum/count > 6) averageGrade = "D";
+//                else if (sum/count > 5) averageGrade = "F";
+//                else averageGrade = "N";
+//
+            }
+        }
 
     }
 
@@ -366,12 +470,10 @@ class Main {
 
         System.out.println("시험 점수를 등록합니다...");
         Score sco = new Score(score, addSubject, studentId, Grade);
-        sco.plusTime();
         if (sco.getTime() <= 10) {
             scoreStore.add(sco);
             System.out.println("\n점수 등록 성공!");
-        }
-        else System.out.println("점수 등록 실패, 10회차를 넘어갑니다.");
+        } else System.out.println("점수 등록 실패, 10회차를 넘어갑니다.");
     } //성적 등록할 때 과목을
 
     // 수강생의 과목별 회차 점수 수정
@@ -407,16 +509,19 @@ class Main {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
         String subject = getSubject();
 
+        int i = 1;
+
         // 학생번호 studentId에 넣고 과목번호 subject에 넣음
         // 요거에 해당하는 데이터만 불러오기.
 
 
 //        이거 studentId랑 subject에 따른 다른 정보를 불러와야함
         for (Score score : scoreStore) {
-            if(score.getTime() >= 10) break;
+            if (i >= 10) break;
             if (Objects.equals(score.getStudentId(), studentId) && Objects.equals(score.getSubjectName(), subject)) // 학생번호랑 과목 번호가 같으면
             {
-                System.out.println(score.getTime() + "회차");
+                System.out.println(i + "회차");
+                i++;
                 if (Integer.parseInt(score.getScoreId()) >= 95) {
                     System.out.println("등급 : " + score.getGrade());
                 } else if (Integer.parseInt(score.getScoreId()) >= 90) {
@@ -431,6 +536,7 @@ class Main {
             }
         }
         System.out.println("\n등급 조회 성공!");
+
     }
 
 }
