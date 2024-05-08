@@ -152,11 +152,7 @@ class Main {
     private static void removeStudent() {
         System.out.println("삭제할 수강생 이름을 입력해주십시오.");
         String studentName = sc.next();
-        for (Student student : studentStore) {
-            if (student.getStudentName().equals(studentName)) {
-                studentStore.remove(student);
-            }
-        }
+        studentStore.removeIf(student -> student.getStudentName().equals(studentName));
     }
 
     private static void inquireStudentStat() {
@@ -266,109 +262,241 @@ class Main {
     private static void inquireAverageGrade() {
         double sum = 0; // 이거 애매한데 ;
         double count = 0;
-        double averJava = 0;
-        double averOri = 0;
-        // 하나하나 다 줘야하나? sum/count를 >??
         String studentId = getStudentId();
         System.out.println("과목별 평균 점수를 불러오는 중입니다.");
-        String averageGrade = "";
+        String averageGrade;
         for (Score score : scoreStore) {
             if (score.getStudentId().equals(studentId)) {
                 //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
                 //과목 이름이 Java면 회차별 성적
-                switch (score.getSubjectName()) {
-                    case "Java":
-                        count++; //회차 대신
-                        switch (score.getGrade()) {
-                            case "A" -> sum += 10;
-                            case "B" -> sum += 9;
-                            case "C" -> sum += 8;
-                            case "D" -> sum += 7;
-                            case "F" -> sum += 6;
-                            case "N" -> sum += 5;
-                        }
-                        System.out.println("j" + sum);
-                        System.out.println("j" + count);
-                        System.out.println(sum / count);
-                        break;
-                    case "객체지향":
-                        if (score.getGrade().equals("A")) sum += 10;
-                        else if (score.getGrade().equals("B")) sum += 9;
-                        else if (score.getGrade().equals("C")) sum += 8;
-                        else if (score.getGrade().equals("D")) sum += 7;
-                        else if (score.getGrade().equals("F")) sum += 6;
-                        else if (score.getGrade().equals("N")) sum += 5;
-                        System.out.println("s" + sum);
-                        System.out.println("s" + count);
-                        System.out.println(sum / count);
-                        break;
-                    case "Spring":
-                        if (score.getGrade().equals("A")) sum += 10;
-                        else if (score.getGrade().equals("B")) sum += 9;
-                        else if (score.getGrade().equals("C")) sum += 8;
-                        else if (score.getGrade().equals("D")) sum += 7;
-                        else if (score.getGrade().equals("F")) sum += 6; // 이게 맞나; //과목 성적이 을 sum에 다 더하고
-                        else if (score.getGrade().equals("N")) sum += 5;
-                        break;
-                    case "JPA":
-                        if (score.getGrade().equals("A")) sum += 10;
-                        else if (score.getGrade().equals("B")) sum += 9;
-                        else if (score.getGrade().equals("C")) sum += 8;
-                        else if (score.getGrade().equals("D")) sum += 7;
-                        else if (score.getGrade().equals("F")) sum += 6;
-                        else if (score.getGrade().equals("N")) sum += 5;
-                        break;
-                    case "MySQL":
-                        if (score.getGrade().equals("A")) sum += 10;
-                        else if (score.getGrade().equals("B")) sum += 9;
-                        else if (score.getGrade().equals("C")) sum += 8;
-                        else if (score.getGrade().equals("D")) sum += 7;
-                        else if (score.getGrade().equals("F")) sum += 6;
-                        else if (score.getGrade().equals("N")) sum += 5;
-                        break;
-                    case "디자인패턴":
-                        if (score.getGrade().equals("A")) sum += 10;
-                        else if (score.getGrade().equals("B")) sum += 9;
-                        else if (score.getGrade().equals("C")) sum += 8;
-                        else if (score.getGrade().equals("D")) sum += 7;
-                        else if (score.getGrade().equals("F")) sum += 6;
-                        else if (score.getGrade().equals("N")) sum += 5;
-                        break;
-                    case "Spring Security":
-                        if (score.getGrade().equals("A")) sum += 10;
-                        else if (score.getGrade().equals("B")) sum += 9;
-                        else if (score.getGrade().equals("C")) sum += 8;
-                        else if (score.getGrade().equals("D")) sum += 7;
-                        else if (score.getGrade().equals("F")) sum += 6;
-                        else if (score.getGrade().equals("N")) sum += 5;
-                        break;
-                    case "Redis":
-                        if (score.getGrade().equals("A")) sum += 10;
-                        else if (score.getGrade().equals("B")) sum += 9;
-                        else if (score.getGrade().equals("C")) sum += 8;
-                        else if (score.getGrade().equals("D")) sum += 7;
-                        else if (score.getGrade().equals("F")) sum += 6;
-                        else if (score.getGrade().equals("N")) sum += 5;
-                        break;
-                    case "MongoDB":
-                        if (score.getGrade().equals("A")) sum += 10;
-                        else if (score.getGrade().equals("B")) sum += 9;
-                        else if (score.getGrade().equals("C")) sum += 8;
-                        else if (score.getGrade().equals("D")) sum += 7;
-                        else if (score.getGrade().equals("F")) sum += 6;
-                        else if (score.getGrade().equals("N")) sum += 5;
-                        break;
+                if (score.getSubjectName().equals("Java")) {
+                    count++; //회차 대신
+                    switch (score.getGrade()) {
+                        case "A" -> sum += 10;
+                        case "B" -> sum += 9;
+                        case "C" -> sum += 8;
+                        case "D" -> sum += 7;
+                        case "F" -> sum += 6;
+                        case "N" -> sum += 5;
+                    }
                 }
-//                if(sum/count > 9) averageGrade = "A";
-//                else if (sum/count > 8) averageGrade = "B";
-//                else if (sum/count > 7) averageGrade = "C";
-//                else if (sum/count > 6) averageGrade = "D";
-//                else if (sum/count > 5) averageGrade = "F";
-//                else averageGrade = "N";
-//
             }
         }
-
+        if (sum / count > 9) averageGrade = "A";
+        else if (sum / count > 8) averageGrade = "B";
+        else if (sum / count > 7) averageGrade = "C";
+        else if (sum / count > 6) averageGrade = "D";
+        else if (sum / count > 5) averageGrade = "F";
+        else averageGrade = "N";
+        System.out.println("Java 평균 성적 : " + averageGrade); // 이거 깔끔하게 안되나 음. 과목 다하면 진짜 길어지는데; 이거 선택한 과목만 보이게 해야되네
+        sum = 0;
+        count = 0;
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId)) {
+                //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
+                //과목 이름이 Java면 회차별 성적
+                if (score.getSubjectName().equals("객체지향")) {
+                    count++; //회차 대신
+                    switch (score.getGrade()) {
+                        case "A" -> sum += 10;
+                        case "B" -> sum += 9;
+                        case "C" -> sum += 8;
+                        case "D" -> sum += 7;
+                        case "F" -> sum += 6;
+                        case "N" -> sum += 5;
+                    }
+                }
+            }
+        }
+        if (sum / count > 9) averageGrade = "A";
+        else if (sum / count > 8) averageGrade = "B";
+        else if (sum / count > 7) averageGrade = "C";
+        else if (sum / count > 6) averageGrade = "D";
+        else if (sum / count > 5) averageGrade = "F";
+        else averageGrade = "N";
+        System.out.println("객체지향 평균 성적 : " + averageGrade); // 이거 깔끔하게 안되나 음. 과목 다하면 진짜 길어지는데;
+        sum = 0;
+        count = 0;
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId)) {
+                //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
+                //과목 이름이 Java면 회차별 성적
+                if (score.getSubjectName().equals("Spring")) {
+                    count++; //회차 대신
+                    switch (score.getGrade()) {
+                        case "A" -> sum += 10;
+                        case "B" -> sum += 9;
+                        case "C" -> sum += 8;
+                        case "D" -> sum += 7;
+                        case "F" -> sum += 6;
+                        case "N" -> sum += 5;
+                    }
+                }
+            }
+        }
+        if (sum / count > 9) averageGrade = "A";
+        else if (sum / count > 8) averageGrade = "B";
+        else if (sum / count > 7) averageGrade = "C";
+        else if (sum / count > 6) averageGrade = "D";
+        else if (sum / count > 5) averageGrade = "F";
+        else averageGrade = "N";
+        System.out.println("Spring 평균 성적 : " + averageGrade); // 이거 깔끔하게 안되나 음. 과목 다하면 진짜 길어지는데;
+        sum = 0;
+        count = 0;
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId)) {
+                //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
+                //과목 이름이 Java면 회차별 성적
+                if (score.getSubjectName().equals("JPA")) {
+                    count++; //회차 대신
+                    switch (score.getGrade()) {
+                        case "A" -> sum += 10;
+                        case "B" -> sum += 9;
+                        case "C" -> sum += 8;
+                        case "D" -> sum += 7;
+                        case "F" -> sum += 6;
+                        case "N" -> sum += 5;
+                    }
+                }
+            }
+        }
+        if (sum / count > 9) averageGrade = "A";
+        else if (sum / count > 8) averageGrade = "B";
+        else if (sum / count > 7) averageGrade = "C";
+        else if (sum / count > 6) averageGrade = "D";
+        else if (sum / count > 5) averageGrade = "F";
+        else averageGrade = "N";
+        System.out.println("JPA 평균 성적 : " + averageGrade); // 이거 깔끔하게 안되나 음. 과목 다하면 진짜 길어지는데;
+        sum = 0;
+        count = 0;
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId)) {
+                //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
+                //과목 이름이 Java면 회차별 성적
+                if (score.getSubjectName().equals("MySQL")) {
+                    count++; //회차 대신
+                    switch (score.getGrade()) {
+                        case "A" -> sum += 10;
+                        case "B" -> sum += 9;
+                        case "C" -> sum += 8;
+                        case "D" -> sum += 7;
+                        case "F" -> sum += 6;
+                        case "N" -> sum += 5;
+                    }
+                }
+            }
+        }
+        if (sum / count > 9) averageGrade = "A";
+        else if (sum / count > 8) averageGrade = "B";
+        else if (sum / count > 7) averageGrade = "C";
+        else if (sum / count > 6) averageGrade = "D";
+        else if (sum / count > 5) averageGrade = "F";
+        else averageGrade = "N";
+        System.out.println("MySQL 평균 성적 : " + averageGrade); // 이거 깔끔하게 안되나 음. 과목 다하면 진짜 길어지는데;
+        sum = 0;
+        count = 0;
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId)) {
+                //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
+                //과목 이름이 Java면 회차별 성적
+                if (score.getSubjectName().equals("디자인 패턴")) {
+                    count++; //회차 대신
+                    switch (score.getGrade()) {
+                        case "A" -> sum += 10;
+                        case "B" -> sum += 9;
+                        case "C" -> sum += 8;
+                        case "D" -> sum += 7;
+                        case "F" -> sum += 6;
+                        case "N" -> sum += 5;
+                    }
+                }
+            }
+        }
+        if (sum / count > 9) averageGrade = "A";
+        else if (sum / count > 8) averageGrade = "B";
+        else if (sum / count > 7) averageGrade = "C";
+        else if (sum / count > 6) averageGrade = "D";
+        else if (sum / count > 5) averageGrade = "F";
+        else averageGrade = "N";
+        System.out.println("디자인 패턴 평균 성적 : " + averageGrade); // 이거 깔끔하게 안되나 음. 과목 다하면 진짜 길어지는데;
+        sum = 0;
+        count = 0;
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId)) {
+                //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
+                //과목 이름이 Java면 회차별 성적
+                if (score.getSubjectName().equals("Spring Security")) {
+                    count++; //회차 대신
+                    switch (score.getGrade()) {
+                        case "A" -> sum += 10;
+                        case "B" -> sum += 9;
+                        case "C" -> sum += 8;
+                        case "D" -> sum += 7;
+                        case "F" -> sum += 6;
+                        case "N" -> sum += 5;
+                    }
+                }
+            }
+        }
+        if (sum / count > 9) averageGrade = "A";
+        else if (sum / count > 8) averageGrade = "B";
+        else if (sum / count > 7) averageGrade = "C";
+        else if (sum / count > 6) averageGrade = "D";
+        else if (sum / count > 5) averageGrade = "F";
+        else averageGrade = "N";
+        System.out.println("Spring Security 평균 성적 : " + averageGrade); // 이거 깔끔하게 안되나 음. 과목 다하면 진짜 길어지는데;
+        sum = 0;
+        count = 0;
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId)) {
+                //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
+                //과목 이름이 Java면 회차별 성적
+                if (score.getSubjectName().equals("Redis")) {
+                    count++; //회차 대신
+                    switch (score.getGrade()) {
+                        case "A" -> sum += 10;
+                        case "B" -> sum += 9;
+                        case "C" -> sum += 8;
+                        case "D" -> sum += 7;
+                        case "F" -> sum += 6;
+                        case "N" -> sum += 5;
+                    }
+                }
+            }
+        }
+        if (sum / count > 9) averageGrade = "A";
+        else if (sum / count > 8) averageGrade = "B";
+        else if (sum / count > 7) averageGrade = "C";
+        else if (sum / count > 6) averageGrade = "D";
+        else if (sum / count > 5) averageGrade = "F";
+        else averageGrade = "N";
+        System.out.println("Redis 평균 성적 : " + averageGrade); // 이거 깔끔하게 안되나 음. 과목 다하면 진짜 길어지는데;
+        sum = 0;
+        count = 0;
+        for (Score score : scoreStore) {
+            if (score.getStudentId().equals(studentId)) {
+                //학생 번호랑 같은 점수를 불러와서 보여주면 다 보여줄텐데
+                //과목 이름이 Java면 회차별 성적
+                if (score.getSubjectName().equals("MongoDB")) {
+                    count++; //회차 대신
+                    switch (score.getGrade()) {
+                        case "A" -> sum += 10;
+                        case "B" -> sum += 9;
+                        case "C" -> sum += 8;
+                        case "D" -> sum += 7;
+                        case "F" -> sum += 6;
+                        case "N" -> sum += 5;
+                    }
+                }
+            }
+        }
+        if (sum / count > 9) averageGrade = "A";
+        else if (sum / count > 8) averageGrade = "B";
+        else if (sum / count > 7) averageGrade = "C";
+        else if (sum / count > 6) averageGrade = "D";
+        else if (sum / count > 5) averageGrade = "F";
+        else averageGrade = "N";
+        System.out.println("MongoDB 평균 성적 : " + averageGrade); // 이거 깔끔하게 안되나 음. 과목 다하면 진짜 길어지는데;
     }
 
     private static String getStudentId() {
@@ -380,13 +508,13 @@ class Main {
         System.out.println("불러올 과목을 선택해 주세요.");
         int j = 1;
         for (Subject subject : subjectStore) {
-            if (subject.getSubjectType() == SUBJECT_TYPE_MANDATORY) {
+            if (subject.getSubjectType().equals(SUBJECT_TYPE_MANDATORY)) {
                 System.out.print(j + "." + subject.getSubjectName() + " ");
                 j++;
             }
         }
         for (Subject subject : subjectStore) {
-            if (subject.getSubjectType() == SUBJECT_TYPE_CHOICE) {
+            if (subject.getSubjectType().equals(SUBJECT_TYPE_CHOICE)) {
                 System.out.print(j + "." + subject.getSubjectName() + " ");
                 j++;
             }
@@ -403,58 +531,58 @@ class Main {
         System.out.println("등록할 과목을 선택해 주세요.");
         int j = 1;
         for (Subject subject : subjectStore) {
-            if (subject.getSubjectType() == SUBJECT_TYPE_MANDATORY) {
+            if (subject.getSubjectType().equals(SUBJECT_TYPE_MANDATORY)) {
                 System.out.print(j + "." + subject.getSubjectName() + " ");
                 j++;
             }
         }
         for (Subject subject : subjectStore) {
-            if (subject.getSubjectType() == SUBJECT_TYPE_CHOICE) {
+            if (subject.getSubjectType().equals(SUBJECT_TYPE_CHOICE)) {
                 System.out.print(j + "." + subject.getSubjectName() + " ");
                 j++;
             }
         }
 
         String input = sc.next();
-        switch (input) {
-            case "Java":
+        addSubject = switch (input) {
+            case "Java" -> {
                 System.out.println("Java 과목 성적을 불러오는 중입니다.");
-                addSubject = "Java";
-                break;
-
-            case "객체지향":
+                yield "Java";
+            }
+            case "객체지향" -> {
                 System.out.println("객체지향 과목 성적을 불러오는 중입니다.");
-                addSubject = "객체지향";
-                break;
-            case "Spring":
+                yield "객체지향";
+            }
+            case "Spring" -> {
                 System.out.println("Spring 과목 성적을 불러오는 중입니다.");
-                addSubject = "Spring";
-                break;
-            case "JPA":
+                yield "Spring";
+            }
+            case "JPA" -> {
                 System.out.println("JPA 과목 성적을 불러오는 중입니다.");
-                addSubject = "JPA";
-                break;
-            case "MySQL":
+                yield "JPA";
+            }
+            case "MySQL" -> {
                 System.out.println("MySQL 과목 성적을 불러오는 중입니다.");
-                addSubject = "MySQL";
-                break;
-            case "디자인 패턴":
+                yield "MySQL";
+            }
+            case "디자인 패턴" -> {
                 System.out.println("디자인 패턴 과목 성적을 불러오는 중입니다.");
-                addSubject = "디자인 패턴";
-                break;
-            case "Spring Security":
+                yield "디자인 패턴";
+            }
+            case "Spring Security" -> {
                 System.out.println("Spring Seucrity 과목 성적을 불러오는 중입니다.");
-                addSubject = "Spring Security";
-                break;
-            case "Redis":
+                yield "Spring Security";
+            }
+            case "Redis" -> {
                 System.out.println("Redis 과목 성적을 불러오는 중입니다.");
-                addSubject = "Redis";
-                break;
-            case "MongoDB":
+                yield "Redis";
+            }
+            case "MongoDB" -> {
                 System.out.println("MongoDB 과목 성적을 불러오는 중입니다.");
-                addSubject = "MongoDB";
-                break;
-        }
+                yield "MongoDB";
+            }
+            default -> addSubject;
+        };
 
         System.out.println("시험 점수를 입력해 주십시오.");
         String score = sc.next();
