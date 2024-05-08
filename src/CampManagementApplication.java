@@ -1,3 +1,7 @@
+import model.Score;
+import model.Student;
+import model.Subject;
+
 import java.util.*;
 
 public class CampManagementApplication {
