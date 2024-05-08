@@ -365,17 +365,20 @@ public class CampManagementApplication {
             subject_Num = Integer.parseInt(line);
 
             // 1 ~ 9 까지만 입력 받고 list는 0 ~ 8 까지만 유효하다.
-            if (subject_Num < 0 || subject_Num > 8) {
+            if (subject_Num < 1 || subject_Num > 9) {
                 System.out.println("유효하지 않은 숫자를 입력 하셨습니다.");
                 continue;
             }
-            subject_Name = subjectStore.get(subject_Num - 1).getSubjectName();
+            
+            // 수정한 예외처리 부분
+            try{
+                subject_Name = subjectStore.get(subject_Num - 1).getSubjectName();
+                if (!Objects.isNull(student) &&
+                        student.getSubjectList().get(INDEX_TYPE_SUBJECT + subject_Num).getSubjectName().equals(subject_Name)) break;
+            }catch (Exception e){
+                System.out.println("해당 학생은 입력하신 과목을 수강하지 않습니다.");
+            }
 
-            if (!Objects.isNull(student) &&
-               student.getSubjectList().get(INDEX_TYPE_SUBJECT + subject_Num).getSubjectName().equals(subject_Name)) break;
-
-
-            System.out.println("해당 학생은 입력하신 과목을 수강하지 않습니다.");
 
         }
 
