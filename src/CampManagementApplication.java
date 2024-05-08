@@ -155,30 +155,15 @@ public class CampManagementApplication {
         System.out.println("\n수강생을 등록합니다...");
         System.out.print("수강생 이름 입력: ");
         String studentName = sc.next();
-        // 기능 구현 (필수 과목, 선택 과목)
         sc.nextLine();
+
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
-        addSubjectList(student);
-        // 기능 구현
+        // addSubjectList(student); 원래 이 코드를 사용했는데 메서드가 너무 많아진 것 같아 아래와 같이 수정
+        addSubjects(student, SUBJECT_TYPE_MANDATORY, 3); // 필수 과목 입력받기
+        addSubjects(student, SUBJECT_TYPE_CHOICE, 2); // 선택 과목 입력받기
+
         studentStore.add(student);
         System.out.println("수강생 등록 성공!");
-    }
-
-    public static void addSubjectList(Student student) {
-        addMandatorySubjects(student);
-        addChoiceSubjects(student);
-    }
-
-    public static void addMandatorySubjects(Student student){
-        System.out.println("=========================");
-        System.out.println("수강할 필수 과목을 3개 이상 선택해주세요");
-        addSubjects(student, SUBJECT_TYPE_MANDATORY, 3);
-    }
-
-    public static void addChoiceSubjects(Student student){
-        System.out.println("=========================");
-        System.out.println("수강할 선택 과목을 2개 이상 선택해주세요");
-        addSubjects(student, SUBJECT_TYPE_CHOICE, 2);
     }
 
     public static void addSubjects(Student student, String subjectType, int minNum) {
@@ -188,6 +173,9 @@ public class CampManagementApplication {
         do {
             addFlag = true;
             subjectMap = new HashMap<>();
+            System.out.println("=========================");
+            System.out.println("수강할 과목을 " + minNum + "개 이상 선택해주세요");
+
             printSubjects(subjectType);
             System.out.println("=========================");
             System.out.println("과목 번호를 입력하세요 (숫자로 입력)");
@@ -200,6 +188,7 @@ public class CampManagementApplication {
             } else {
                 // 입력한 값 중 하나라도 과목 목록에 존재하지 않으면 다시 입력 받아야 함
                 for (String subjectId : subjectArr) {
+                    // 입력받은 번호를 과목 고유번호 형식으로 포맷팅
                     subjectId = INDEX_TYPE_SUBJECT + subjectId;
                     for (Subject sub: subjectStore) {
                         // 입력한 과목명이 등록된 과목 번호와 일치할 때
@@ -210,6 +199,7 @@ public class CampManagementApplication {
                         }
                         addFlag = false;
                     }
+                    // 기존 과목 리스트에 일치하는 항목이 없을 때
                     if (!addFlag) {
                         System.out.println("올바른 번호를 입력해주세요!");
                         break;
@@ -218,6 +208,7 @@ public class CampManagementApplication {
             }
         } while (!addFlag);
 
+        // 오류 없이 과목을 잘 선택한 경우 student 과목 목록 map에 추가해준다.
         student.getSubjectList().putAll(subjectMap);
         System.out.println(subjectType +" 과목 등록 완료!");
     }
@@ -241,6 +232,23 @@ public class CampManagementApplication {
         }
         System.out.println();
     }
+
+//    public static void addSubjectList(Student student) {
+//        addMandatorySubjects(student);
+//        addChoiceSubjects(student);
+//    }
+//
+//    public static void addMandatorySubjects(Student student){
+//        System.out.println("=========================");
+//        System.out.println("수강할 필수 과목을 3개 이상 선택해주세요");
+//        addSubjects(student, SUBJECT_TYPE_MANDATORY, 3);
+//    }
+//
+//    public static void addChoiceSubjects(Student student){
+//        System.out.println("=========================");
+//        System.out.println("수강할 선택 과목을 2개 이상 선택해주세요");
+//        addSubjects(student, SUBJECT_TYPE_CHOICE, 2);
+//    }
 
     // 수강생 목록 조회
     private static void inquireStudent() {
