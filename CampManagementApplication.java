@@ -288,7 +288,7 @@ public class CampManagementApplication {
             } else {
                 // 입력한 값 중 하나라도 과목 목록에 존재하지 않으면 다시 입력 받아야 함
                 for (String subjectId : subjectArr) {
-                    subjectId = INDEX_TYPE_SUBJECT + subjectId;
+                    subjectId = INDEX_TYPE_SUBJECT + subjectId; //SU + NUM
                     for (Subject sub : subjectStore) {
                         // 입력한 과목명이 등록된 과목 번호와 일치할 때
                         if (subjectId.equals(sub.getSubjectId()) && sub.getSubjectType().equals(subjectType)) {
@@ -314,7 +314,7 @@ public class CampManagementApplication {
         int[] arr = new int[10];
         Arrays.fill(arr, -1);
         for (String subject : student.getSubjectList().keySet()) {
-            student.getScoreList().put(subject, arr);
+            student.getScoreList().put(subject, arr); // 과목이랑 점수들어가는 배열이네
         }
 
         System.out.println(subjectType + " 과목 등록 완료!");
@@ -392,10 +392,40 @@ public class CampManagementApplication {
     }
 
     private static void inquireAverageGradeBySubject() {
+        String studentId = getStudentId();
+        String averageGrade;
+        Student student;
+        for (Subject sub : subjectStore) {
+            switch (sub.getSubjectName()) {
+                case "Java":
+
+                    break;
+                case "객체지향":
+                    break;
+                case "Spring":
+                    break;
+                case "JPA":
+                    break;
+                case "MySQL":
+                    break;
+                case "디자인 패턴":
+                    break;
+                case "Spring Security":
+                    break;
+                case "Redis":
+                    break;
+                case "MongoDB":
+                    break;
+
+            }
+
+        }
     }
 
     private static void inquireAverageGradeByStatus() {
-
+        for (Subject sub : subjectStore) {
+            System.out.println(sub.getSubjectName());
+        }
     }
 
     // 수강생 번호 입력 받은 후 수강생이 존재하는지 확인
