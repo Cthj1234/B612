@@ -780,7 +780,7 @@ public class CampManagementApplication {
 
 
         //예외 처리 (알맞은 값만 입력 받도록)
-        while (true) {
+        while (true) { // 수강하지 않는 과목 입력시 오류 발생
             try {
                 String input = sc.next();
                 find_Sub_Num = Integer.parseInt(input);
