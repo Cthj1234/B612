@@ -103,8 +103,8 @@ public class CampManagementApplication {
     }
 
     private static void displayMainView() throws InterruptedException {
-        boolean flag = true;
-        while (flag) {
+        boolean mainFlag = true;
+        while (mainFlag) {
             System.out.println("\n==================================");
             System.out.println("내일배움캠프 수강생 관리 프로그램 실행 중...");
             System.out.println("1. 수강생 관리");
@@ -116,7 +116,7 @@ public class CampManagementApplication {
             switch (input) {
                 case 1 -> displayStudentView(); // 수강생 관리
                 case 2 -> displayScoreView(); // 점수 관리
-                case 3 -> flag = false; // 프로그램 종료
+                case 3 -> mainFlag = false; // 프로그램 종료
                 default -> {
                     System.out.println("잘못된 입력입니다.\n되돌아갑니다!");
                     Thread.sleep(2000);
@@ -127,8 +127,8 @@ public class CampManagementApplication {
     }
 
     private static void displayStudentView() {
-        boolean flag = true;
-        while (flag) {
+        boolean studentFlag = true;
+        while (studentFlag) {
             System.out.println("==================================");
             System.out.println("수강생 관리 실행 중...");
             System.out.println("1. 수강생 등록");
@@ -148,10 +148,10 @@ public class CampManagementApplication {
                 case 4 -> changeStudentStatus(); // 수강생 상태 수정
                 case 5 -> inquireStudentByStatus();
                 case 6 -> removeStudent();
-                case 7 -> flag = false; // 메인 화면 이동
+                case 7 -> studentFlag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
-                    flag = false;
+                    studentFlag = false;
                 }
             }
         }
@@ -164,19 +164,19 @@ public class CampManagementApplication {
         String studentName = sc.next();
         sc.nextLine();
 
-        boolean addFlag;
+        boolean studentAddFlag;
         Status status = null;
         do {
-            addFlag = true;
+            studentAddFlag = true;
             System.out.print("수강생 상태 입력[Green, Red, Yellow]: ");
             String input = sc.nextLine();
             try {
                 status = Status.valueOf(input);
             } catch (IllegalArgumentException e) {
-                addFlag = false;
+                studentAddFlag = false;
                 System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
             }
-        } while (!addFlag);
+        } while (!studentAddFlag);
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName, status);
 
@@ -188,11 +188,11 @@ public class CampManagementApplication {
     }
 
     public static void addSubjects(Student student, String subjectType, int minNum) {
-        boolean addFlag;
+        boolean subjectAddFlag;
         HashMap<String, Subject> subjectMap;
 
         do {
-            addFlag = true;
+            subjectAddFlag = true;
             subjectMap = new HashMap<>();
             System.out.println("=========================");
             System.out.println("수강할 과목을 " + minNum + "개 이상 선택해주세요");
@@ -209,7 +209,7 @@ public class CampManagementApplication {
 
             if (subjectArr.length < minNum) {
                 System.out.println(subjectType + " 과목은 " + minNum + "개 이상 선택해야 합니다. ");
-                addFlag = false;
+                subjectAddFlag = false;
             } else {
                 // 입력한 값 중 하나라도 과목 목록에 존재하지 않으면 다시 입력 받아야 함
                 for (String subjectId : subjectArr) {
@@ -219,19 +219,19 @@ public class CampManagementApplication {
                         // 입력한 과목명이 등록된 과목 번호와 일치할 때
                         if (subjectId.equals(sub.getSubjectId()) && sub.getSubjectType().equals(subjectType)) {
                             subjectMap.put(sub.getSubjectId(), sub);
-                            addFlag = true;
+                            subjectAddFlag = true;
                             break;
                         }
-                        addFlag = false;
+                        subjectAddFlag = false;
                     }
                     // 기존 과목 리스트에 일치하는 항목이 없을 때
-                    if (!addFlag) {
+                    if (!subjectAddFlag) {
                         System.out.println("존재하지 않는 과목 번호가 포함되어 있습니다!");
                         break;
                     }
                 }
             }
-        } while (!addFlag);
+        } while (!subjectAddFlag);
 
         // 오류 없이 과목을 잘 선택한 경우 student 과목 목록 map에 추가
         student.getSubjectList().putAll(subjectMap);
@@ -296,18 +296,18 @@ public class CampManagementApplication {
         String studentName = sc.next(); // 수강생 이름 입력받기
         String studentStatus;
         Status status = null;
-        boolean addFlag;
+        boolean statusChangeFlag;
         do {
-            addFlag = true;
+            statusChangeFlag = true;
             System.out.println("변경할 상태를 입력해 주십시오. [Green, Red, Yellow]");
             studentStatus = sc.next();
             try {
                 status = Status.valueOf(studentStatus);
             } catch (IllegalArgumentException e) {
-                addFlag = false;
+                statusChangeFlag = false;
                 System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
             }
-        } while (!addFlag);
+        } while (!statusChangeFlag);
 
         for (Student student : studentStore) { // studentStore을 탐색하다가
             if (student.getStudentName().equals(studentName)) { // 입력받은 이름과 같은 이름이 나오면
@@ -319,20 +319,20 @@ public class CampManagementApplication {
 
     // 상태별 수강생 상태 조회
     private static void inquireStudentByStatus() {
-        boolean addFlag;
+        boolean statusInquireFlag;
         String state;
         Status status = null;
         do {
-            addFlag = true;
+            statusInquireFlag = true;
             System.out.println("조회할 상태를 입력해주십시오. [Green, Red, Yellow]");
             state = sc.next();
             try {
                 status = Status.valueOf(state);
             } catch (IllegalArgumentException e) {
-                addFlag = false;
+                statusInquireFlag = false;
                 System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
             }
-        } while (!addFlag);
+        } while (!statusInquireFlag);
         for (Student student : studentStore) { // studentStore를 돌며
             if (student.getStatus().equals(Status.valueOf(state))) { // 상태가 입력받은 것과 같으면
                 System.out.println(student.getStudentName() + " : " + state); // 수강생 이름과 상태를 출력하기
@@ -350,8 +350,8 @@ public class CampManagementApplication {
     }
 
     private static void displayScoreView() {
-        boolean flag = true;
-        while (flag) {
+        boolean scoreFlag = true;
+        while (scoreFlag) {
             System.out.println("==================================");
             System.out.println("점수 관리 실행 중...");
             System.out.println("1. 수강생의 과목별 시험 회차 및 점수 등록");
@@ -369,10 +369,10 @@ public class CampManagementApplication {
                 case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
                 case 4 -> inquireAverageGradeBySubject();
                 case 5 -> inquireAverageGradeByStatus();
-                case 6 -> flag = false; // 메인 화면 이동
+                case 6 -> scoreFlag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
-                    flag = false;
+                    scoreFlag = false;
                 }
             }
         }
@@ -419,18 +419,18 @@ public class CampManagementApplication {
     private static void inquireAverageGradeByStatus() {
         System.out.println("조회할 상태를 입력해주십시오. [Green, Red, Yellow]");
         String stat;
-        boolean addFlag;
+        boolean statusInquireFlag;
         Status status = null;
         do {
-            addFlag = true;
+            statusInquireFlag = true;
             stat = sc.next();
             try {
                 status = Status.valueOf(stat);
             } catch (IllegalArgumentException e) {
-                addFlag = false;
+                statusInquireFlag = false;
                 System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
             }
-        } while (!addFlag);
+        } while (!statusInquireFlag);
         for (Student student : studentStore) {
             if (student.getStatus().equals(status)) {
                 System.out.println(student.getStudentName() + " 님의 평균 과목 등급 ");
@@ -660,7 +660,7 @@ public class CampManagementApplication {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
         String selectedSubjectId = ""; // 선택한 과목 고유 번호
         // int[] selectedSubjectArr; // 선택한 과목의 회차 점수가 보관될 배열
-        boolean errFlag = true;
+        boolean updateRoundFlag = true;
 
         // 학생 존재하는지 확인
         while (studentId.equals("Invalid")) {
@@ -676,7 +676,7 @@ public class CampManagementApplication {
         }
 
         do {
-            errFlag = true;
+            updateRoundFlag = true;
             // 해당 학생이 수강하는 과목, 과목명 출력
             printStudentSubjects(student);
             System.out.print("점수를 수정할 과목 번호 하나를 입력해주세요! (숫자로 입력) : ");
@@ -696,17 +696,17 @@ public class CampManagementApplication {
                         }
                     }
                 } else {
-                    errFlag = false;
+                    updateRoundFlag = false;
                 }
                 // 과목 번호로 숫자가 아닌 값이 들어왔을 때
             } catch (InputMismatchException e) {
                 System.out.println("숫자 하나를 입력해주세요!");
-                errFlag = false;
+                updateRoundFlag = false;
             }
-        } while (!errFlag);
+        } while (!updateRoundFlag);
 
         do {
-            errFlag = true;
+            updateRoundFlag = true;
             System.out.print("수정할 회차를 입력해주세요! (회차 번호만 입력) : ");
             try {
                 int selectedScoreNum = sc.nextInt();
@@ -714,23 +714,23 @@ public class CampManagementApplication {
                 if (selectedScoreNum >= 1 && selectedScoreNum <= 10) {
                     updateRealScore(student.getScoreList().get(selectedSubjectId), selectedScoreNum);
                 } else {
-                    errFlag = false;
+                    updateRoundFlag = false;
                     System.out.println("올바른 회차 번호를 입력해주세요!");
                 }
             } catch (InputMismatchException e) {
-                errFlag = false;
+                updateRoundFlag = false;
                 System.out.println("숫자를 입력해주세요!");
             }
-        } while (!errFlag);
+        } while (!updateRoundFlag);
         // 기능 구현
         System.out.println("\n점수 수정 성공!");
     }
 
     // 점수 입력 받고 실제 회차별 점수 배열 값 업데이트
     private static void updateRealScore(int[] selectedSubjectArr, int index) {
-        boolean errFlag = true;
+        boolean updateRealScoreFlag = true;
         do {
-            errFlag = true;
+            updateRealScoreFlag = true;
             try {
                 System.out.print("수정할 점수값을 입력해주세요! (0 - 100) : ");
                 int score = sc.nextInt();
@@ -741,13 +741,13 @@ public class CampManagementApplication {
                     System.out.println(index + "회차 : " + score + " (수정)");
                 } else {
                     System.out.println("0 ~ 100 사이의 숫자를 입력해주세요!");
-                    errFlag = false;
+                    updateRealScoreFlag = false;
                 }
             } catch (InputMismatchException e) {
                 System.out.println("숫자를 입력해주세요!");
-                errFlag = false;
+                updateRealScoreFlag = false;
             }
-        } while (!errFlag);
+        } while (!updateRealScoreFlag);
     }
 
     // 수강생의 특정 과목 회차별 등급 조회
