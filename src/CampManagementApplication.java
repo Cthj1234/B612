@@ -393,7 +393,7 @@ public class CampManagementApplication {
                 case "Java", "객체지향", "Spring", "JPA", "MySQL":
                     if (student != null && student.getScoreList().get(sub.getSubjectName()) != null) {
                         System.out.print(sub.getSubjectName() + " 과목 평균 등급 :");
-                        averageGradeMandotary(student, sub.getSubjectId());
+                        averageGradeMandatory(student, sub.getSubjectId());
                         System.out.println();
                     }
                     break;
@@ -431,7 +431,7 @@ public class CampManagementApplication {
                     for (Subject sub : subjectStore) {
                         if (key.equals(sub.getSubjectId())) {
                             System.out.print(sub.getSubjectName() + " 평균 등급 :");
-                            averageGradeMandotary(student, sub.getSubjectId());
+                            averageGradeMandatory(student, sub.getSubjectId());
                             System.out.println();
                         }
                     }
@@ -442,7 +442,7 @@ public class CampManagementApplication {
     }
 
     // 필수과목 평균내기
-    private static void averageGradeMandotary(Student student, String subjectId) {
+    private static void averageGradeMandatory(Student student, String subjectId) {
         double sum = 0;
         double average;
         int count = 0;
