@@ -10,14 +10,13 @@ public class CampManagementApplication {
     // 데이터 저장소
     private static List<Student> studentStore;
     private static List<Subject> subjectStore;
-    private static List<Score> scoreStore;
 
     // 과목 타입
-    private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
-    private static String SUBJECT_TYPE_CHOICE = "CHOICE";
+    private static final String SUBJECT_TYPE_MANDATORY = "MANDATORY";
+    private static final String SUBJECT_TYPE_CHOICE = "CHOICE";
 
-    private static int MANDATORY_MIN = 3;
-    private static int CHOICE_MIN = 2;
+    private static final int MANDATORY_MIN = 3;
+    private static final int CHOICE_MIN = 2;
 
     // index 관리 필드
     private static int studentIndex;
@@ -79,7 +78,6 @@ public class CampManagementApplication {
                         sequence(INDEX_TYPE_SUBJECT),
                         "MongoDB",
                         SUBJECT_TYPE_CHOICE));
-        scoreStore = new ArrayList<>();
 
     }
 
@@ -728,7 +726,7 @@ public class CampManagementApplication {
 
     // 점수 입력 받고 실제 회차별 점수 배열 값 업데이트
     private static void updateRealScore(int[] selectedSubjectArr, int index) {
-        boolean updateRealScoreFlag = true;
+        boolean updateRealScoreFlag;
         do {
             updateRealScoreFlag = true;
             try {
