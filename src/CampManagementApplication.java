@@ -141,7 +141,7 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> createStudent(); // 수강생 등록
-                case 2 -> inquireStudent(studentStore); // 수강생 목록 조회
+                case 2 -> inquireStudent(); // 수강생 목록 조회
                 case 3 -> changeStudentName(); // 수강생 이름 수정
                 case 4 -> changeStudentStatus(); // 수강생 상태 수정
                 case 5 -> inquireStudentByStatus();
@@ -234,6 +234,9 @@ public class CampManagementApplication {
         // 오류 없이 과목을 잘 선택한 경우 student 과목 목록 map에 추가
         student.getSubjectList().putAll(subjectMap);
 
+        // 해당 학생의 subjectList를 설정하는 for문입니다.
+        // 해당하는 과목의 이름과, 10개의 배열로 저장합니다.
+        // 여기서 -1로 채워두는 이유는 중복 등록 방지입니다 ex) 디자인패턴 3회차에 0점으로 등록 되어있으면 수정 외엔 다시 등록 불가능
         for (String subject : student.getSubjectList().keySet()) {
             int[] arr = new int[10];
             Arrays.fill(arr, -1);
@@ -263,88 +266,35 @@ public class CampManagementApplication {
     }
 
     // 수강생 목록 조회
-    private static void inquireStudent(List<Student> studentStore) {
-        System.out.println("수강생 목록을 조회합니다...");
+    private static void inquireStudent() {
+        System.out.println("\n수강생 목록을 조회합니다...");
         for (Student students : studentStore) {
             System.out.print("[" + students.getStudentId() + "] ");
             System.out.println("이름 : " + students.getStudentName());
         }
-    }
-
-    // 학생 이름 정확히 입력받기
-    private static String getExactStudentId(String studentName) {
-        List<Student> sameNameStudentList = new ArrayList<>();
-        for (Student student : studentStore) {
-            if (student.getStudentName().equals(studentName)) {
-                sameNameStudentList.add(student);
-            }
-        }
-
-        // 두 명 이상인 경우
-        if (sameNameStudentList.size() > 1) {
-            while (true) {
-                try {
-                    System.out.println("=========================");
-                    System.out.println("해당 이름을 가진 수강생 목록입니다!");
-                    inquireStudent(sameNameStudentList);
-                    System.out.println("=========================");
-                    System.out.print("수강생의 번호를 입력해주세요! (숫자만 입력) : ");
-                    int studentNum = sc.nextInt();
-                    for (Student student : sameNameStudentList) {
-                        if (student.getStudentId().equals(INDEX_TYPE_STUDENT + studentNum)) {
-                            return student.getStudentId();
-                        }
-                    }
-                    System.out.println("올바른 수강생 번호를 입력해주세요!");
-                } catch (InputMismatchException e) {
-                    System.out.println("숫자를 입력해주세요!");
-                    sc.nextLine();
-                }
-            }
-        } else if (sameNameStudentList.isEmpty()) { // 일치하는 수강생이 없을 때
-            System.out.println("이름이 일치하는 수강생이 없습니다!");
-            return "Invalid";
-        } else {
-            return sameNameStudentList.get(0).getStudentId();
-        }
+        System.out.println("\n수강생 목록 조회 성공!");
     }
 
     // 수강생 이름 변경
     private static void changeStudentName() {
-        String studentName;
-        String studentId;
-
-        do {
-            System.out.println("이름을 변경할 수강생 이름을 입력해주십시오.");
-            studentName = sc.next();
-            studentId = getExactStudentId(studentName);
-        } while (studentId.equals("Invalid"));
-
+        System.out.println("이름을 변경할 수강생 이름을 입력해주십시오.");
+        String studentName = sc.next();
         System.out.println("변경할 이름을 입력해 주십시오.");
         String changeName = sc.next();
-
         for (Student student : studentStore) {
-            if (student.getStudentId().equals(studentId)) {
+            if (student.getStudentName().equals(studentName)) {
                 student.changeName(changeName);
             }
         }
-        System.out.println("이름 변경 완료!");
     }
 
     // 수강생 상태 수정
     private static void changeStudentStatus() {
-        String studentName;
+        System.out.println("상태를 변경할 수강생 이름을 입력해주십시오.");
+        String studentName = sc.next(); // 수강생 이름 입력받기
         String studentStatus;
-        String studentId;
         Status status = null;
         boolean statusChangeFlag;
-
-        do {
-            System.out.println("상태를 변경할 수강생 이름을 입력해주십시오.");
-            studentName = sc.next();
-            studentId = getExactStudentId(studentName);
-        } while (studentId.equals("Invalid"));
-
         do {
             statusChangeFlag = true;
             System.out.println("변경할 상태를 입력해 주십시오. [Green, Red, Yellow]");
@@ -357,12 +307,12 @@ public class CampManagementApplication {
             }
         } while (!statusChangeFlag);
 
-        for (Student student : studentStore) {
-            if (student.getStudentId().equals(studentId)) {
-                student.changeStatus(Status.valueOf(studentStatus));
+        for (Student student : studentStore) { // studentStore을 탐색하다가
+            if (student.getStudentName().equals(studentName)) { // 입력받은 이름과 같은 이름이 나오면
+                student.changeStatus(Status.valueOf(studentStatus)); // changeStatus 함수를 이용해 상태 변경하기 -> changeStatus 함수는 Student.java
+                // 파일에 따로 구현되어있음
             }
         }
-        System.out.println("상태 변경 완료!");
     }
 
     // 상태별 수강생 상태 조회
@@ -390,18 +340,11 @@ public class CampManagementApplication {
 
     // 수강생 삭제
     private static void removeStudent() {
-        String studentName;
-        String studentId;
+        System.out.println("삭제할 수강생 이름을 입력해주십시오."); // 이름 겹치면 번호 입력받아야지 뭐 좀따해
+        String studentName = sc.next(); // 수강생 이름 입력받기
+        studentStore.removeIf(student -> student.getStudentName().equals(studentName)); // studentStore에서 입력받은 String과
+        // 같은 student 객체를 삭제하기
 
-        do {
-            System.out.println("삭제할 수강생 이름을 입력해주십시오.");
-            studentName = sc.next();
-            studentId = getExactStudentId(studentName);
-        } while (studentId.equals("Invalid"));
-
-        final String finalStudentId = studentId;
-        studentStore.removeIf(student -> student.getStudentId().equals(finalStudentId));
-        System.out.println(studentName +" 수강생 삭제 완료!");
     }
 
     private static void displayScoreView() {
@@ -574,11 +517,13 @@ public class CampManagementApplication {
     // 수강생 번호 입력 받은 후 수강생이 존재하는지 확인
     private static String getStudentId() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        String tmp = INDEX_TYPE_STUDENT + sc.next();
+        String stu = INDEX_TYPE_STUDENT;
+        String tmp = sc.next();
+        stu = stu.concat(tmp);
 
         for (Student student : studentStore) {
-            if (student.getStudentId().equals(tmp)) {
-                return tmp;
+            if (student.getStudentId().equals(stu)) {
+                return stu;
             }
         }
         return "Invalid";
