@@ -517,11 +517,13 @@ public class CampManagementApplication {
     // 수강생 번호 입력 받은 후 수강생이 존재하는지 확인
     private static String getStudentId() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
+        String stu = INDEX_TYPE_STUDENT;
         String tmp = sc.next();
+        stu = stu.concat(tmp);
 
         for (Student student : studentStore) {
-            if (student.getStudentId().equals(tmp)) {
-                return tmp;
+            if (student.getStudentId().equals(stu)) {
+                return stu;
             }
         }
         return "Invalid";
