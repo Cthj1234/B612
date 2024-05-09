@@ -358,7 +358,7 @@ public class CampManagementApplication {
         } while (!statusChangeFlag);
 
         for (Student student : studentStore) {
-            if (student.getStudentName().equals(studentName)) {
+            if (student.getStudentId().equals(studentId)) {
                 student.changeStatus(Status.valueOf(studentStatus));
             }
         }
