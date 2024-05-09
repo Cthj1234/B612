@@ -794,8 +794,8 @@ public class CampManagementApplication {
             }
 
             System.out.println("회차별 등급을 조회합니다...");
-            if (find_Sub_Num <= 5) displayGrade_Mandatory(student, find_Sub_Num);
-            else displayGrade_Choice(student, find_Sub_Num);
+            if (find_Sub_Num <= 5) displayGradeMandatory(student, find_Sub_Num);
+            else displayGradeChoice(student, find_Sub_Num);
 
             System.out.println("\n등급 조회 성공!");
 
@@ -805,27 +805,27 @@ public class CampManagementApplication {
     }
 
     // 해당 학생의 필수 과목 점수 조회
-    private static void displayGrade_Mandatory(Student student, int findSubNum) {
+    private static void displayGradeMandatory(Student student, int findSubNum) {
         int[] arr = student.getScoreList().get(INDEX_TYPE_SUBJECT + findSubNum);
 
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == -1) continue;
-            System.out.println(i + 1 + "회차 과목 점수 : " + change_Grade_Mandatory(arr[i]));
+            System.out.println(i + 1 + "회차 과목 점수 : " + changeGradeMandatory(arr[i]));
         }
     }
 
     // 해당 학생의 선택 과목 점수 조회
-    private static void displayGrade_Choice(Student student, int findSubNum) {
+    private static void displayGradeChoice(Student student, int findSubNum) {
         int[] arr = student.getScoreList().get(INDEX_TYPE_SUBJECT + findSubNum);
 
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == -1) continue;
-            System.out.println(i + 1 + "회차 과목 점수 : " + change_Grade_Choice(arr[i]));
+            System.out.println(i + 1 + "회차 과목 점수 : " + changeGradeChoice(arr[i]));
         }
     }
 
     // 필수 과목 등급 반환
-    private static char change_Grade_Mandatory(int num) {
+    private static char changeGradeMandatory(int num) {
         if (num >= 95) return 'A';
         else if (num >= 90) return 'B';
         else if (num >= 80) return 'C';
@@ -835,7 +835,7 @@ public class CampManagementApplication {
     }
 
     // 선택 과목 등급 반환
-    private static char change_Grade_Choice(int num) {
+    private static char changeGradeChoice(int num) {
         if (num >= 90) return 'A';
         else if (num >= 80) return 'B';
         else if (num >= 70) return 'C';
