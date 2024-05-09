@@ -770,39 +770,42 @@ public class CampManagementApplication {
             }
         }
 
+        // 기능 구현 (조회할 특정 과목)
+        index = 1;
+        System.out.println("조회 하실 과목을 입력 해주세요 : ");
+        // 과목 번호, 과목 이름 출력
+        for (Subject sub : subjectStore) {
+            System.out.println(index++ + ". " + sub.getSubjectName());
+        }
+
+
+        //예외 처리 (알맞은 값만 입력 받도록)
         while (true) {
-            // 기능 구현 (조회할 특정 과목)
-            index = 1;
-            System.out.println("조회 하실 과목을 입력 해주세요 : ");
-            // 과목 번호, 과목 이름 출력
-            for (Subject sub : subjectStore) {
-                System.out.println(index++ + ". " + sub.getSubjectName());
-            }
-
-
-            //예외 처리 (알맞은 값만 입력 받도록)
             try {
                 String input = sc.next();
                 find_Sub_Num = Integer.parseInt(input);
                 if (find_Sub_Num < 1 || find_Sub_Num > 9) {
-                    System.out.println("해당 과목 번호는 유효하지 않습니다.");
-                    continue;
+                    System.out.println();
+                    throw new IllegalArgumentException("해당 과목 번호는 유효하지 않습니다. 다시 입력해 주십시오.");
                 }
+                break;
             } catch (NumberFormatException e) {
                 System.out.println("숫자를 입력 해주시길 바랍니다.");
                 continue;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                continue;
             }
-
-            System.out.println("회차별 등급을 조회합니다...");
-            if (find_Sub_Num <= 5) displayGradeMandatory(student, find_Sub_Num);
-            else displayGradeChoice(student, find_Sub_Num);
-
-            System.out.println("\n등급 조회 성공!");
-
-            break;
         }
 
+        System.out.println("회차별 등급을 조회합니다...");
+        if (find_Sub_Num <= 5) displayGradeMandatory(student, find_Sub_Num);
+        else displayGradeChoice(student, find_Sub_Num);
+
+        System.out.println("\n등급 조회 성공!");
+
     }
+
 
     // 해당 학생의 필수 과목 점수 조회
     private static void displayGradeMandatory(Student student, int findSubNum) {
