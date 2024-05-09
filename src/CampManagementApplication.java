@@ -1,5 +1,6 @@
 
 import model.Score;
+import model.Status;
 import model.Subject;
 import model.Student;
 
@@ -82,6 +83,7 @@ public class CampManagementApplication {
 
     }
 
+
     // index 자동 증가
     private static String sequence(String type) {
         switch (type) {
@@ -163,17 +165,17 @@ public class CampManagementApplication {
         sc.nextLine();
 
         boolean addFlag;
-        String status;
+        Status status = null;
         do {
             addFlag = true;
-
             System.out.print("수강생 상태 입력[Green, Red, Yellow]: ");
-            status = sc.nextLine();
-            if (status.equals("Green") || status.equals("Red") || status.equals("Yellow")) {
-                break;
-            } else addFlag = false;
-            System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
-
+            String input = sc.nextLine();
+            try {
+                status = Status.valueOf(input);
+            } catch (IllegalArgumentException e) {
+                addFlag = false;
+                System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+            }
         } while (!addFlag);
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName, status);
@@ -292,22 +294,24 @@ public class CampManagementApplication {
     private static void changeStudentStatus() {
         System.out.println("상태를 변경할 수강생 이름을 입력해주십시오.");
         String studentName = sc.next(); // 수강생 이름 입력받기
-        String studentStatus; // 상태 입력받기
+        String studentStatus;
+        Status status = null;
         boolean addFlag;
         do {
             addFlag = true;
             System.out.println("변경할 상태를 입력해 주십시오. [Green, Red, Yellow]");
             studentStatus = sc.next();
-            if (studentStatus.equals("Green") || studentStatus.equals("Red") || studentStatus.equals("Yellow")) {
-                break;
-            } else
+            try {
+                status = Status.valueOf(studentStatus);
+            } catch (IllegalArgumentException e) {
                 addFlag = false;
-            System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+                System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+            }
         } while (!addFlag);
 
         for (Student student : studentStore) { // studentStore을 탐색하다가
             if (student.getStudentName().equals(studentName)) { // 입력받은 이름과 같은 이름이 나오면
-                student.changeStatus(studentStatus); // changeStatus 함수를 이용해 상태 변경하기 -> changeStatus 함수는 Student.java
+                student.changeStatus(Status.valueOf(studentStatus)); // changeStatus 함수를 이용해 상태 변경하기 -> changeStatus 함수는 Student.java
                 // 파일에 따로 구현되어있음
             }
         }
@@ -317,19 +321,20 @@ public class CampManagementApplication {
     private static void inquireStudentByStatus() {
         boolean addFlag;
         String state;
+        Status status = null;
         do {
             addFlag = true;
             System.out.println("조회할 상태를 입력해주십시오. [Green, Red, Yellow]");
             state = sc.next();
-            if (state.equals("Green") || state.equals("Red") || state.equals("Yellow")) {
-                break;
-            } else
+            try {
+                status = Status.valueOf(state);
+            } catch (IllegalArgumentException e) {
                 addFlag = false;
-            System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
-
+                System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+            }
         } while (!addFlag);
         for (Student student : studentStore) { // studentStore를 돌며
-            if (student.getStatus().equals(state)) { // 상태가 입력받은 것과 같으면
+            if (student.getStatus().equals(Status.valueOf(state))) { // 상태가 입력받은 것과 같으면
                 System.out.println(student.getStudentName() + " : " + state); // 수강생 이름과 상태를 출력하기
             }
         }
@@ -413,16 +418,18 @@ public class CampManagementApplication {
     // 특정 상태 수강생들의 필수 과목 평균 등급 조회
     private static void inquireAverageGradeByStatus() {
         System.out.println("조회할 상태를 입력해주십시오. [Green, Red, Yellow]");
-        String status;
+        String stat;
         boolean addFlag;
+        Status status = null;
         do {
             addFlag = true;
-            status = sc.next();
-            if (status.equals("Green") || status.equals("Red") || status.equals("Yellow")) {
-                break;
-            } else
+            stat = sc.next();
+            try {
+                status = Status.valueOf(stat);
+            } catch (IllegalArgumentException e) {
                 addFlag = false;
-            System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+                System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+            }
         } while (!addFlag);
         for (Student student : studentStore) {
             if (student.getStatus().equals(status)) {
