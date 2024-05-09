@@ -433,144 +433,6 @@ public class CampManagementApplication {
         }
     }
 
-    // 수강생의 과목별 평균 등급 조회
-    private static void inquireAverageGradeBySubject() {
-        String studentId = getStudentId();
-        Student student = null;
-
-        while (studentId.equals("Invalid")) {
-            System.out.println("해당 학생은 존재 하지 않습니다.");
-            studentId = getStudentId();
-        }
-
-        for (Student tmp_student : studentStore) {
-            if (tmp_student.getStudentId().equals(studentId)) {
-                student = tmp_student;
-            }
-        }
-
-        for (Subject sub : subjectStore) { // sub를 다 뒤져서 그런가 학생이 가진 과목만 봐야됨
-            switch (sub.getSubjectName()) {
-                case "Java", "객체지향", "Spring", "JPA", "MySQL":
-                    if (student != null && student.getScoreList().get(sub.getSubjectName()) != null) {
-                        System.out.print(sub.getSubjectName() + " 과목 평균 등급 :");
-                        averageGradeMandatory(student, sub.getSubjectId());
-                        System.out.println();
-                    }
-                    break;
-                case "디자인 패턴", "Spring Security", "Redis", "MongoDB":
-                    if (student != null && student.getSubjectList().get(sub.getSubjectName()) != null) {
-                        System.out.print(sub.getSubjectName() + " 과목 평균 등급 :");
-                        averageGradeChoice(student, sub.getSubjectId());
-                        System.out.println();
-                    }
-                    break;
-
-            }
-        }
-    }
-
-    // 특정 상태 수강생들의 필수 과목 평균 등급 조회
-    private static void inquireAverageGradeByStatus() {
-        System.out.println("조회할 상태를 입력해주십시오. [Green, Red, Yellow]");
-        String stat;
-        boolean statusInquireFlag;
-        Status status = null;
-        do {
-            statusInquireFlag = true;
-            stat = sc.next();
-            try {
-                status = Status.valueOf(stat);
-            } catch (IllegalArgumentException e) {
-                statusInquireFlag = false;
-                System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
-            }
-        } while (!statusInquireFlag);
-        for (Student student : studentStore) {
-            if (student.getStatus().equals(status)) {
-                System.out.println(student.getStudentName() + " 님의 평균 과목 등급 ");
-                Set<String> set = student.getSubjectList().keySet();
-                for (String key : set) {
-                    for (Subject sub : subjectStore) {
-                        if (key.equals(sub.getSubjectId())) {
-                            System.out.print(sub.getSubjectName() + " 평균 등급 :");
-                            averageGradeMandatory(student, sub.getSubjectId());
-                            System.out.println();
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-    // 필수과목 평균내기
-    private static void averageGradeMandatory(Student student, String subjectId) {
-        double sum = 0;
-        double average;
-        int count = 0;
-        int[] arr = student.getScoreList().get(subjectId);
-
-        for (int j : arr) {
-            if (j == -1)
-                continue;
-            sum += j;
-            count++;
-        }
-        average = sum / count;
-        System.out.print(" " + changeGradeMandatory(average) + " ");
-
-    }
-
-    // 선택과목 평균내기
-    private static void averageGradeChoice(Student student, String subjectId) {
-        double sum = 0;
-        double average;
-        int count = 0;
-        int[] arr = student.getScoreList().get(subjectId);
-
-        for (int j : arr) {
-            if (j == -1)
-                continue;
-            sum += j;
-            count++;
-        }
-        average = sum / count;
-        System.out.print(" " + changeGradeChoice(average) + " ");
-    }
-
-    // 수강생 필수 과목 성적 등급 변환
-    private static char changeGradeMandatory(double num) {
-        if (num >= 95)
-            return 'A';
-        else if (num >= 90)
-            return 'B';
-        else if (num >= 80)
-            return 'C';
-        else if (num >= 70)
-            return 'D';
-        else if (num >= 60)
-            return 'F';
-        else
-            return 'N';
-    }
-
-    // 수강생 선택 과목 성적 등급 변환
-    private static char changeGradeChoice(double num) {
-        if (num >= 90)
-            return 'A';
-        else if (num >= 80)
-            return 'B';
-        else if (num >= 70)
-            return 'C';
-        else if (num >= 60)
-            return 'D';
-        else if (num >= 50)
-            return 'F';
-        else
-            return 'N';
-    }
-
     // 수강생 번호 입력 받은 후 수강생이 존재하는지 확인
     private static String getStudentId() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
@@ -779,7 +641,7 @@ public class CampManagementApplication {
                 System.out.println("숫자를 입력해주세요!");
             }
         } while (!updateRoundFlag);
-        // 기능 구현
+
         System.out.println("\n점수 수정 성공!");
     }
 
@@ -807,7 +669,7 @@ public class CampManagementApplication {
         } while (!updateRealScoreFlag);
     }
 
-    // 수강생의 특정 과목 회차별 등급 조회
+    // 선택한 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
         int index = 1;
         int find_Sub_Num = 0;
@@ -863,6 +725,112 @@ public class CampManagementApplication {
 
     }
 
+    // 수강생의 과목별 평균 등급 조회
+    private static void inquireAverageGradeBySubject() {
+        String studentId = getStudentId();
+        Student student = null;
+
+        while (studentId.equals("Invalid")) {
+            System.out.println("해당 학생은 존재 하지 않습니다.");
+            studentId = getStudentId();
+        }
+
+        for (Student tmp_student : studentStore) {
+            if (tmp_student.getStudentId().equals(studentId)) {
+                student = tmp_student;
+            }
+        }
+
+        for (Subject sub : subjectStore) { // sub를 다 뒤져서 그런가 학생이 가진 과목만 봐야됨
+            switch (sub.getSubjectName()) {
+                case "Java", "객체지향", "Spring", "JPA", "MySQL":
+                    if (student != null && student.getScoreList().get(sub.getSubjectName()) != null) {
+                        System.out.print(sub.getSubjectName() + " 과목 평균 등급 :");
+                        averageGradeMandatory(student, sub.getSubjectId());
+                        System.out.println();
+                    }
+                    break;
+                case "디자인 패턴", "Spring Security", "Redis", "MongoDB":
+                    if (student != null && student.getSubjectList().get(sub.getSubjectName()) != null) {
+                        System.out.print(sub.getSubjectName() + " 과목 평균 등급 :");
+                        averageGradeChoice(student, sub.getSubjectId());
+                        System.out.println();
+                    }
+                    break;
+
+            }
+        }
+    }
+
+    // 특정 상태 수강생들의 필수 과목 평균 등급 조회
+    private static void inquireAverageGradeByStatus() {
+        System.out.println("조회할 상태를 입력해주십시오. [Green, Red, Yellow]");
+        String stat;
+        boolean statusInquireFlag;
+        Status status = null;
+        do {
+            statusInquireFlag = true;
+            stat = sc.next();
+            try {
+                status = Status.valueOf(stat);
+            } catch (IllegalArgumentException e) {
+                statusInquireFlag = false;
+                System.out.println("Green, Red, Yellow 중에 하나를 입력하세요. ");
+            }
+        } while (!statusInquireFlag);
+        for (Student student : studentStore) {
+            if (student.getStatus().equals(status)) {
+                System.out.println(student.getStudentName() + " 님의 평균 과목 등급 ");
+                Set<String> set = student.getSubjectList().keySet();
+                for (String key : set) {
+                    for (Subject sub : subjectStore) {
+                        if (key.equals(sub.getSubjectId())) {
+                            System.out.print(sub.getSubjectName() + " 평균 등급 :");
+                            averageGradeMandatory(student, sub.getSubjectId());
+                            System.out.println();
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    // 필수과목 평균내기
+    private static void averageGradeMandatory(Student student, String subjectId) {
+        double sum = 0;
+        double average;
+        int count = 0;
+        int[] arr = student.getScoreList().get(subjectId);
+
+        for (int j : arr) {
+            if (j == -1)
+                continue;
+            sum += j;
+            count++;
+        }
+        average = sum / count;
+        System.out.print(" " + changeGradeMandatory(average) + " ");
+
+    }
+
+    // 선택과목 평균내기
+    private static void averageGradeChoice(Student student, String subjectId) {
+        double sum = 0;
+        double average;
+        int count = 0;
+        int[] arr = student.getScoreList().get(subjectId);
+
+        for (int j : arr) {
+            if (j == -1)
+                continue;
+            sum += j;
+            count++;
+        }
+        average = sum / count;
+        System.out.print(" " + changeGradeChoice(average) + " ");
+    }
+
 
     // 해당 학생의 필수 과목 점수 조회
     private static void displayGradeMandatory(Student student, int findSubNum) {
@@ -902,6 +870,38 @@ public class CampManagementApplication {
         else if (num >= 60) return 'D';
         else if (num >= 50) return 'F';
         else return 'N';
+    }
+
+    // 수강생 필수 과목 성적 등급 변환
+    private static char changeGradeMandatory(double num) {
+        if (num >= 95)
+            return 'A';
+        else if (num >= 90)
+            return 'B';
+        else if (num >= 80)
+            return 'C';
+        else if (num >= 70)
+            return 'D';
+        else if (num >= 60)
+            return 'F';
+        else
+            return 'N';
+    }
+
+    // 수강생 선택 과목 성적 등급 변환
+    private static char changeGradeChoice(double num) {
+        if (num >= 90)
+            return 'A';
+        else if (num >= 80)
+            return 'B';
+        else if (num >= 70)
+            return 'C';
+        else if (num >= 60)
+            return 'D';
+        else if (num >= 50)
+            return 'F';
+        else
+            return 'N';
     }
 
 }
